@@ -44,45 +44,44 @@ function initLaTeX() {
         });
     }
 
+    function addButtonToGroup(group, element, className) {
+        var lock = group.getElementsByClassName('btn-latex');
+        if (lock.length > 0) {
+            return;
+        }
+        var button = document.createElement('a');
+        button.className = className;
+        button.onclick = function () {
+            openInNewTab(element);
+        };
+        button.href = '';
+        button.innerHTML = 'LaTeX';
+        group.appendChild(button);
+    }
+
     function addOpenInNewTabButton(element) {
-        var groups, group, lock, button;
+        var groups;
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('btn-group');
-            if (groups.length === 0) {
-                return;
+            if (groups.length > 0) {
+                addButtonToGroup(groups[0], element, 'btn btn-sm btn-latex');
             }
-            group = groups[0];
-            lock = group.getElementsByClassName('btn-latex');
-            if (lock.length > 0) {
-                return;
+            groups = element.getElementsByClassName('file-actions');
+            if (groups.length > 0) {
+                var gistElement = element.getElementsByClassName('gist-blob-name');
+                if (gistElement.length > 0) {
+                    gistElement = gistElement[0];
+                    if (gistElement.innerHTML.trim().endsWith('.md')) {
+                        addButtonToGroup(groups[0], element, 'btn btn-sm btn-latex');
+                    }
+                }
             }
-            button = document.createElement('a');
-            button.className = 'btn btn-sm btn-latex';
-            button.onclick = function () {
-                openInNewTab(element);
-            };
-            button.href = '';
-            button.innerHTML = 'LaTeX';
-            group.appendChild(button);
         }
         if (element.className.indexOf(TYPE_COMMENT) >= 0) {
             groups = element.getElementsByClassName('timeline-comment-actions');
-            if (groups.length === 0) {
-                return;
+            if (groups.length > 0) {
+                addButtonToGroup(groups[0], element, 'btn-link timeline-comment-action btn-latex');
             }
-            group = groups[0];
-            lock = group.getElementsByClassName('btn-latex');
-            if (lock.length > 0) {
-                return;
-            }
-            button = document.createElement('a');
-            button.className = 'btn-link timeline-comment-action btn-latex';
-            button.onclick = function () {
-                openInNewTab(element);
-            };
-            button.href = '';
-            button.innerHTML = 'LaTeX';
-            group.appendChild(button);
         }
     }
 
