@@ -2,8 +2,8 @@
   "manifest_version": 2,
 
   "name": "LaTeX GitHub Markdown",
-  "description": "Show LaTeX formulas while browsering GitHub Markdown files.",
-  "version": "0.0.1",
+  "description": "Show LaTeX formulas for GitHub Markdown files.",
+  "version": "0.0.2",
 
   "browser_action": {
     "default_icon": "icon.png",
