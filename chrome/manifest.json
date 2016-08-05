@@ -10,18 +10,15 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-    "activeTab",
-    "tabs",
-    "cookies",
-    "storage",
-    "webNavigation",
-    "https://github.com/",
-    "https://gist.github.com/"
+  "activeTab",
+  "tabs",
+  "cookies",
+  "storage",
+  "webNavigation",
+  "https://github.com/",
+  "https://gist.github.com/"
   ],
-  "content_security_policy": "script-src 'self' https://cdn.mathjax.org; object-src 'self'",
   "background": {
-    "scripts": [
-      "inject.js"
-    ]
+    "scripts": ["inject.js"]
   }
 }

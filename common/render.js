@@ -1,7 +1,7 @@
 /*jslint browser: true*/
 /*global console, window, Blob*/
 
-window.onload = function () {
+function initLaTeX() {
     'use strict';
     var elements = document.getElementsByClassName('file');
 
@@ -38,8 +38,12 @@ window.onload = function () {
             return;
         }
         var group = groups[0];
+        var lock = group.getElementsByClassName('btn-latex');
+        if (lock.length > 0) {
+            return;
+        }
         var button = document.createElement('a');
-        button.className = 'btn btn-sm';
+        button.className = 'btn btn-sm btn-latex';
         button.onclick = function () {
             openInNewTab(element);
         };
@@ -53,4 +57,6 @@ window.onload = function () {
             addOpenInNewTabButton(element);
         }
     });
-};
+}
+
+initLaTeX();
