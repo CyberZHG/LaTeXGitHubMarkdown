@@ -49,12 +49,11 @@ function initLaTeX() {
         if (lock.length > 0) {
             return;
         }
-        var button = document.createElement('a');
+        var button = document.createElement('button');
         button.className = className;
         button.onclick = function () {
             openInNewTab(element);
         };
-        button.href = '';
         button.innerHTML = 'LaTeX';
         group.appendChild(button);
     }
@@ -65,6 +64,7 @@ function initLaTeX() {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
                 addButtonToGroup(groups[0], element, 'btn btn-sm btn-latex');
+                return;
             }
             groups = element.getElementsByClassName('file-actions');
             if (groups.length > 0) {
@@ -73,6 +73,7 @@ function initLaTeX() {
                     gistElement = gistElement[0];
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
                         addButtonToGroup(groups[0], element, 'btn btn-sm btn-latex');
+                        return;
                     }
                 }
             }
@@ -81,6 +82,7 @@ function initLaTeX() {
             groups = element.getElementsByClassName('timeline-comment-actions');
             if (groups.length > 0) {
                 addButtonToGroup(groups[0], element, 'btn-link timeline-comment-action btn-latex');
+                return;
             }
         }
     }
