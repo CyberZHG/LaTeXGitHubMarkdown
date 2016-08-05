@@ -3,15 +3,9 @@
 
 window.onload = function () {
     'use strict';
-    var elements = document.getElementsByClassName('markdown-body');
+    var elements = document.getElementsByClassName('file');
 
     function openInNewTab(element) {
-        while (element && element.className.indexOf('file') === -1) {
-            element = element.parentElement;
-        }
-        if (!element) {
-            return;
-        }
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
         window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fs) {
             var randomName = Math.floor(Math.random() * 268435455).toString(16) + '.html';
@@ -38,9 +32,25 @@ window.onload = function () {
         });
     }
 
+    function addOpenInNewTabButton(element) {
+        var groups = element.getElementsByClassName('btn-group');
+        if (groups.length === 0) {
+            return;
+        }
+        var group = groups[0];
+        var button = document.createElement('a');
+        button.className = 'btn btn-sm';
+        button.onclick = function () {
+            openInNewTab(element);
+        };
+        button.href = '#';
+        button.innerHTML = 'LaTeX';
+        group.appendChild(button);
+    }
+
     Array.prototype.forEach.call(elements, function (element) {
         if (element.innerHTML.indexOf('$$') >= 0) {
-            openInNewTab(element);
+            addOpenInNewTabButton(element);
         }
     });
 };
