@@ -3,6 +3,7 @@
 
 function initLaTeX() {
     'use strict';
+    var TYPE_README = 'readme boxed-group';
     var TYPE_FILE = 'file';
     var TYPE_COMMENT = 'timeline-comment';
 
@@ -14,6 +15,7 @@ function initLaTeX() {
         });
     }
 
+    addToElements(document.getElementsByClassName(TYPE_README));
     addToElements(document.getElementsByClassName(TYPE_FILE));
     addToElements(document.getElementsByClassName(TYPE_COMMENT));
 
@@ -50,7 +52,7 @@ function initLaTeX() {
             return;
         }
         var button = document.createElement('button');
-        button.className = className;
+        button.className = className + ' btn-latex';
         button.onclick = function () {
             openInNewTab(element);
         };
@@ -63,7 +65,7 @@ function initLaTeX() {
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], element, 'btn btn-sm btn-latex');
+                addButtonToGroup(groups[0], element, 'btn btn-sm');
                 return;
             }
             groups = element.getElementsByClassName('file-actions');
@@ -72,7 +74,7 @@ function initLaTeX() {
                 if (gistElement.length > 0) {
                     gistElement = gistElement[0];
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
-                        addButtonToGroup(groups[0], element, 'btn btn-sm btn-latex');
+                        addButtonToGroup(groups[0], element, 'btn btn-sm');
                         return;
                     }
                 }
@@ -83,6 +85,23 @@ function initLaTeX() {
             if (groups.length > 0) {
                 addButtonToGroup(groups[0], element, 'btn-link timeline-comment-action btn-latex');
                 return;
+            }
+        }
+        if (element.className.indexOf(TYPE_README) >= 0) {
+            var actions = element.getElementsByClassName('file-actions');
+            if (actions.length === 0) {
+                var header = element.getElementsByTagName('h3');
+                if (header.length > 0) {
+                    header = header[0];
+                    actions = document.createElement('div');
+                    actions.className = 'file-actions';
+                    header.appendChild(actions);
+                    groups = document.createElement('div');
+                    groups.className = 'btn-group';
+                    actions.appendChild(groups);
+                    addButtonToGroup(groups, element, 'btn btn-sm');
+                    return;
+                }
             }
         }
     }

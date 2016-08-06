@@ -8,18 +8,21 @@ Chrome Web Store: [LaTeX GitHub Markdown](https://chrome.google.com/webstore/det
 ### Introduction
 
 A chrome extension that adds `LaTeX` buttons to Markdown elements on GitHub.
-The LaTeX formulas begins and ends with `$` or `$$` are all rendered as inline style.
+The LaTeX formulas begin and end with `$` or `$$` are all rendered as inline style.
 Following is an example:
 
-$$\left \\{ \begin{array}{rll}
-    \nabla \cdot \mathbf{E} &=& \displaystyle \frac {\rho} {\varepsilon_0} \\\
-    \nabla \cdot \mathbf{B} &=& 0 \\\
-    \nabla \times \mathbf{E} &=& \displaystyle - \frac{\partial \mathbf{B}} {\partial t} \\\
-    \nabla \times \mathbf{B} &=& \displaystyle \mu_0\mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}} {\partial t}  \\\
-\end{array} \right .$$
+$$\nabla \times \mathbf{B} = \displaystyle \mu_0\mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}} {\partial t}$$
 
-If you successfully installed this extension, you can see the `LaTeX` button in the right-top corner in the action groups:
+If you successfully installed this extension, you can see the `LaTeX` button in the right-top corner of the Markdown document.
+
+You can see the `LaTeX` button in the following elements:
+
+* The default `README.md`.
+* The Markdown file in a repository.
+* The comments in a issue.
+* Gist file whose extension is `.md`.
 
 ### More details
 
-The LaTeX formulas are rendered with [MathJax](https://www.mathjax.org/).
+* The formulas are rendered with [MathJax](https://www.mathjax.org/).
+* Due to content security policy, we cannot render the formulas in the same page.

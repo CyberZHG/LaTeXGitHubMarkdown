@@ -1,2 +1,4 @@
-# Compressed package
+# Package
 *.zip
+*.crx
+*.pem
