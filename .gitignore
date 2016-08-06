@@ -1,10 +1,2 @@
-# Chrome
-chrome/*
-!chrome/manifest.json
-!chrome/inject.js
-
-# Firefox
-firefox/*
-
 # Compressed package
 *.zip
