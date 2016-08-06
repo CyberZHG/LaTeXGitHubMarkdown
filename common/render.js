@@ -88,7 +88,7 @@ function initLaTeX() {
     }
 
     elements.forEach(function (element) {
-        if (element.innerHTML.indexOf('$$') >= 0) {
+        if (element.innerHTML.indexOf('$') >= 0) {
             addOpenInNewTabButton(element);
         }
     });
