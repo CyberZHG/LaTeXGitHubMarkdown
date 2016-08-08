@@ -6,6 +6,7 @@ function initLaTeX() {
     var TYPE_README = 'readme boxed-group',
         TYPE_FILE = 'file',
         TYPE_COMMENT = 'timeline-comment',
+        TYPE_WIKI = 'wiki-body',
 
         elements = [];
 
@@ -18,6 +19,7 @@ function initLaTeX() {
     addToElements(document.getElementsByClassName(TYPE_README));
     addToElements(document.getElementsByClassName(TYPE_FILE));
     addToElements(document.getElementsByClassName(TYPE_COMMENT));
+    addToElements(document.getElementsByClassName(TYPE_WIKI));
 
     function openInNewTab(element) {
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
@@ -84,7 +86,7 @@ function initLaTeX() {
         if (element.className.indexOf(TYPE_COMMENT) >= 0) {
             groups = element.getElementsByClassName('timeline-comment-actions');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], element, 'btn-link timeline-comment-action btn-latex');
+                addButtonToGroup(groups[0], element, 'btn-link timeline-comment-action');
                 return;
             }
         }
@@ -103,6 +105,16 @@ function initLaTeX() {
                     addButtonToGroup(groups, element, 'btn btn-sm');
                     return;
                 }
+            }
+        }
+        if (element.className.indexOf(TYPE_WIKI) >= 0) {
+            actions = element.getElementsByClassName('gh-header-actions');
+            if (actions.length === 0) {
+                actions = document.createElement('div');
+                actions.className = 'gh-header-actions';
+                element.insertBefore(actions, element.firstChild);
+                addButtonToGroup(actions, element, 'btn btn-sm');
+                return;
             }
         }
     }
