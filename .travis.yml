@@ -1,0 +1,9 @@
+language: node_js
+install:
+  - npm install -g jslint
+before_script:
+  - jslint inject.js
+  - jslint popup.js
+  - jslint render.js
+script:
+  - ls

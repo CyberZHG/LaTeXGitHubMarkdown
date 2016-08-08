@@ -3,11 +3,11 @@
 
 function initLaTeX() {
     'use strict';
-    var TYPE_README = 'readme boxed-group';
-    var TYPE_FILE = 'file';
-    var TYPE_COMMENT = 'timeline-comment';
+    var TYPE_README = 'readme boxed-group',
+        TYPE_FILE = 'file',
+        TYPE_COMMENT = 'timeline-comment',
 
-    var elements = [];
+        elements = [];
 
     function addToElements(elems) {
         Array.prototype.forEach.call(elems, function (element) {
@@ -31,7 +31,8 @@ function initLaTeX() {
                     writer.onwriteend = function () {
                         window.open(file.toURL());
                     };
-                    var html = document.head.innerHTML;
+                    var html = document.head.innerHTML,
+                        blob;
                     html += '<body>';
                     html += element.innerHTML;
                     html += '<script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
@@ -39,7 +40,7 @@ function initLaTeX() {
                     html += "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['$$','$$']],displayMath: []}});";
                     html += '</script>';
                     html += '</body>';
-                    var blob = new Blob([html], {type: 'text/plain'});
+                    blob = new Blob([html], {type: 'text/plain'});
                     writer.write(blob);
                 });
             });
@@ -47,11 +48,11 @@ function initLaTeX() {
     }
 
     function addButtonToGroup(group, element, className) {
-        var lock = group.getElementsByClassName('btn-latex');
+        var lock = group.getElementsByClassName('btn-latex'),
+            button = document.createElement('button');
         if (lock.length > 0) {
             return;
         }
-        var button = document.createElement('button');
         button.className = className + ' btn-latex';
         button.onclick = function () {
             openInNewTab(element);
@@ -61,7 +62,7 @@ function initLaTeX() {
     }
 
     function addOpenInNewTabButton(element) {
-        var groups;
+        var groups, gistElement, actions, header;
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
@@ -70,7 +71,7 @@ function initLaTeX() {
             }
             groups = element.getElementsByClassName('file-actions');
             if (groups.length > 0) {
-                var gistElement = element.getElementsByClassName('gist-blob-name');
+                gistElement = element.getElementsByClassName('gist-blob-name');
                 if (gistElement.length > 0) {
                     gistElement = gistElement[0];
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
@@ -88,9 +89,9 @@ function initLaTeX() {
             }
         }
         if (element.className.indexOf(TYPE_README) >= 0) {
-            var actions = element.getElementsByClassName('file-actions');
+            actions = element.getElementsByClassName('file-actions');
+            header = element.getElementsByTagName('h3');
             if (actions.length === 0) {
-                var header = element.getElementsByTagName('h3');
                 if (header.length > 0) {
                     header = header[0];
                     actions = document.createElement('div');

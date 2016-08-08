@@ -1,6 +1,8 @@
 LaTeX GitHub Markdown
 =====================
 
+[![travis-ci](https://travis-ci.org/CyberZHG/LaTeXGitHubMarkdown.svg)](https://travis-ci.org/CyberZHG/LaTeXGitHubMarkdown)
+
 ### Installation
 
 Chrome Web Store: [LaTeX GitHub Markdown](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
