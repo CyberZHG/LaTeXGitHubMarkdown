@@ -33,48 +33,6 @@ function initLaTeX() {
     addToElements(document.getElementsByClassName(TYPE_WIKI));
 
     /**
-     * Get request.
-     * @param {string} url
-     * @param {function} callback The first parameter is the request boolean result, the second parameter is the text.
-     * @return {string}
-     */
-    function get(url, callback) {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open('GET', url);
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-                if (xmlhttp.status === 200) {
-                    callback(true, xmlhttp.responseText);
-                } else {
-                    callback(false, xmlhttp.statusText);
-                }
-            }
-        };
-        xmlhttp.send();
-    }
-
-    /**
-     * Post request.
-     * @param {string} url
-     * @param {function} callback The first parameter is the request boolean result, the second parameter is the text.
-     * @return {string}
-     */
-    function post(url, data, callback) {
-        var xmlhttp = new XMLHttpRequest();
-        xmlhttp.open('POST', url);
-        xmlhttp.onreadystatechange = function () {
-            if (xmlhttp.readyState === XMLHttpRequest.DONE) {
-                if (xmlhttp.status === 200) {
-                    callback(true, xmlhttp.responseText);
-                } else {
-                    callback(false, xmlhttp.statusText);
-                }
-            }
-        };
-        xmlhttp.send(data);
-    }
-
-    /**
      * Try to recover from the conflict of LaTeX and Markdown.
      *
      * @param {Element} element
@@ -174,108 +132,16 @@ function initLaTeX() {
     }
 
     /**
-     * Generate HTML with raw Markdown text.
-     * First escape the escape characters in raw text, then use GitHub API to compile the text.
-     *
-     * @param {string} url The url that holds the raw Markdown text.
-     * @param {function} callback The first parameter is the compiled text.
-     */
-    function reRender(url, callback) {
-        /**
-         * Add escape characters to LaTeX fomulas.
-         * @param {string} raw Raw Markdown text.
-         * @return {string} The escaped Markdown.
-         */
-        function escapeLaTeXs(raw) {
-            /**
-             * Escape LaTeX formular.
-             *
-             * @param {string} raw
-             * @param {number} begin
-             * @param {number} end
-             *
-             * @return {string}
-             */
-            function escapeLaTex(raw, begin, end) {
-                var idx = begin,
-                    escaped = '';
-                while (idx < end) {
-                    if (raw[idx] === '\\') {
-                        escaped += '\\\\';
-                    } else {
-                        escaped += raw[idx];
-                    }
-                }
-                return escaped;
-            }
-
-            var idx = 0,
-                beginIdx = -1,
-                dollarNum = 0,
-                isEscaped = false,
-                c,
-                dollarBegin,
-                escaped = '';
-            while (idx < raw.length) {
-                c = raw[idx];
-                if (isEscaped) {
-                    escaped += c;
-                    isEscaped = false;
-                } else {
-                    if (c === '\\') {
-                        escaped += c;
-                        isEscaped = true;
-                    } else {
-                        if (c === '$') {
-                            dollarBegin = idx;
-                            while (idx < raw.length && raw[idx] === '$') {
-                                idx += 1;
-                            }
-                        }
-                        if (beginIdx === -1) {
-                            escaped += raw.slice(dollarBegin, idx);
-                            dollarNum = idx - dollarBegin;
-                            if (dollarNum <= 2) {
-                                beginIdx = idx;
-                            }
-                        } else {
-                            if (idx - dollarBegin === dollarNum) {
-                                escaped += escapeLaTex(raw, beginIdx, idx);
-                            } else {
-                                escaped += raw.slice(beginIdx, idx);
-                            }
-                        }
-                    }
-                }
-                idx += 1;
-            }
-            return escaped;
-        }
-
-        get(url, function (success, text) {
-            if (success) {
-                var data = {
-                    'text': escapeLaTeXs(text),
-                    'mode': 'gfm'
-                };
-                post('https://api.github.com/markdown/raw', data, function (success, text) {
-                    if (success) {
-                        callback(text);
-                    }
-                });
-            }
-        });
-    }
-
-    /**
      * Open the page with MathJax inserted.
      *
      * Due to GitHub's strict content security policy, MathJax could not be inserted in the same page.
      * The new page uses the local file system, the function will not work if file system is disabled.
      *
-     * @param {function} render The parameter is a callback function that takes the rendered text.
+     * @param {Element} element The element that triggered the convertion.
+     *
+     * @return {void}
      */
-    function openInNewTab(render) {
+    function openInNewTab(element) {
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
         window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fs) {
             var randomName = Math.floor(Math.random() * 268435455).toString(16) + '.html';
@@ -289,17 +155,15 @@ function initLaTeX() {
                     };
                     var html = document.head.innerHTML,
                         blob;
-                    render(function (rendered) {
-                        html += '<body>';
-                        html += rendered;
-                        html += '<script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
-                        html += '<script type="text/x-mathjax-config">';
-                        html += "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['$$','$$']],displayMath: []}});";
-                        html += '</script>';
-                        html += '</body>';
-                        blob = new Blob([html], {type: 'text/plain'});
-                        writer.write(blob);
-                    });
+                    html += '<body>';
+                    html += recover(element);
+                    html += '<script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+                    html += '<script type="text/x-mathjax-config">';
+                    html += "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['$$','$$']],displayMath: []}});";
+                    html += '</script>';
+                    html += '</body>';
+                    blob = new Blob([html], {type: 'text/plain'});
+                    writer.write(blob);
                 });
             });
         });
@@ -312,10 +176,13 @@ function initLaTeX() {
      * This is used to prevent duplicated insertion.
      *
      * @param {Element} group The action group.
+     * @param {Element} element The Markdown element.
      * @param {string} className The class names of the button.
-     * @param {function} render The parameter is a callback function that takes the rendered text.
+     * @param {string} rawUrl
+     *
+     * @return {void}
      */
-    function addButtonToGroup(group, className, render) {
+    function addButtonToGroup(group, element, className, rawUrl) {
         var lock = group.getElementsByClassName('btn-latex'),
             button = document.createElement('button');
         if (lock.length > 0) {
@@ -323,27 +190,68 @@ function initLaTeX() {
         }
         button.className = className + ' btn-latex';
         button.onclick = function () {
-            openInNewTab(render);
+            if (rawUrl === undefined) {
+                openInNewTab(element);
+            } else {
+                var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/raw?';
+                url += 'url=' + encodeURIComponent(rawUrl);
+                url += '&escape=1';
+                window.open(url);
+            }
         };
         button.innerHTML = 'LaTeX';
         group.appendChild(button);
     }
 
     /**
+     * Generate raw.githubusercontent.com url for raw file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructRawGitHubUserContentUrl(rawUrl) {
+        var rawBegin = -1,
+            rawEnd = 0,
+            cnt = 0;
+        while (rawEnd < rawUrl.length) {
+            if (rawUrl[rawEnd] === '/') {
+                cnt += 1;
+            }
+            if (cnt === 3 && rawBegin === -1) {
+                rawBegin = rawEnd;
+            }
+            if (cnt === 4) {
+                return 'https://raw.githubusercontent.com' + rawUrl.slice(0, rawBegin) + rawUrl.slice(rawEnd);
+            }
+            rawEnd += 1;
+        }
+        throw 'Unexpected end of function';
+    }
+
+    /**
+     * Generate gist.githubusercontent.com url for raw file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructGistGitHubUserContentUrl(rawUrl) {
+        return 'https://gist.githubusercontent.com' + rawUrl;
+    }
+
+    /**
      * Add the LaTeX button to the Markdown element.
      *
      * @param {Element} element The Markdown element.
+     *
+     * @return {void}
      */
     function addOpenInNewTabButton(element) {
-        var groups, gistElement, actions, header;
-        /** Gist files. */
+        var groups, gistElement, actions, header, url;
+        /** Markdown and gist files. */
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], 'btn btn-sm', function (callback) {
-                    var url = document.getElementById('raw-url').getAttribute('href');
-                    reRender(url, callback);
-                });
+                url = document.getElementById('raw-url').getAttribute('href');
+                url = constructRawGitHubUserContentUrl(url);
+                addButtonToGroup(groups[0], element, 'btn btn-sm', url);
                 return;
             }
             groups = element.getElementsByClassName('file-actions');
@@ -352,9 +260,9 @@ function initLaTeX() {
                 if (gistElement.length > 0) {
                     gistElement = gistElement[0];
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
-                        addButtonToGroup(groups[0], 'btn btn-sm', function (callback) {
-                            callback(recover(element));
-                        });
+                        url = groups[0].getElementsByClassName('btn')[0].getAttribute('href');
+                        url = constructGistGitHubUserContentUrl(url);
+                        addButtonToGroup(groups[0], element, 'btn btn-sm', url);
                         return;
                     }
                 }
@@ -364,13 +272,11 @@ function initLaTeX() {
         if (element.className.indexOf(TYPE_COMMENT) >= 0) {
             groups = element.getElementsByClassName('timeline-comment-actions');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], 'btn-link timeline-comment-action', function (callback) {
-                    callback(recover(element));
-                });
+                addButtonToGroup(groups[0], element, 'btn-link timeline-comment-action');
                 return;
             }
         }
-        /** Markdown files. */
+        /** ReadMe files. */
         if (element.className.indexOf(TYPE_README) >= 0) {
             actions = element.getElementsByClassName('file-actions');
             header = element.getElementsByClassName('markdown-body');
@@ -383,9 +289,7 @@ function initLaTeX() {
                     groups = document.createElement('div');
                     groups.className = 'btn-group';
                     actions.appendChild(groups);
-                    addButtonToGroup(groups, 'btn btn-sm', function (callback) {
-                        callback(recover(element));
-                    });
+                    addButtonToGroup(groups, element, 'btn btn-sm');
                     return;
                 }
             }
@@ -397,9 +301,7 @@ function initLaTeX() {
                 actions = document.createElement('div');
                 actions.className = 'gh-header-actions';
                 element.insertBefore(actions, element.firstChild);
-                addButtonToGroup(actions, element, 'btn btn-sm', function (callback) {
-                    callback(recover(element));
-                });
+                addButtonToGroup(actions, element, 'btn btn-sm');
                 return;
             }
         }
