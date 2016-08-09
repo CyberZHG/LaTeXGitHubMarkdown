@@ -1,6 +1,7 @@
 language: node_js
 branches:
   only:
+    - gh-pages
     - /.*/
 install:
   - npm install -g jslint
