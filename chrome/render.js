@@ -193,31 +193,47 @@ function initLaTeX() {
             if (rawUrl === undefined) {
                 openInNewTab(element);
             } else {
-                var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/raw?',
-                    rawBegin = -1,
-                    rawEnd = 0,
-                    cnt = 0;
-                while (rawEnd < rawUrl.length) {
-                    if (rawUrl[rawEnd] === '/') {
-                        cnt += 1;
-                    }
-                    if (cnt === 3 && rawBegin === -1) {
-                        rawBegin = rawEnd;
-                    }
-                    if (cnt === 4) {
-                        rawUrl = rawUrl.slice(0, rawBegin) + rawUrl.slice(rawEnd);
-                        console.log(rawUrl);
-                        break;
-                    }
-                    rawEnd += 1;
-                }
-                url += 'url=' + encodeURIComponent('https://raw.githubusercontent.com' + rawUrl);
+                var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/raw?';
+                url += 'url=' + encodeURIComponent(rawUrl);
                 url += '&escape=1';
                 window.open(url);
             }
         };
         button.innerHTML = 'LaTeX';
         group.appendChild(button);
+    }
+
+    /**
+     * Generate raw.githubusercontent.com url for raw file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructRawGitHubUserContentUrl(rawUrl) {
+        var rawBegin = -1,
+            rawEnd = 0,
+            cnt = 0;
+        while (rawEnd < rawUrl.length) {
+            if (rawUrl[rawEnd] === '/') {
+                cnt += 1;
+            }
+            if (cnt === 3 && rawBegin === -1) {
+                rawBegin = rawEnd;
+            }
+            if (cnt === 4) {
+                return 'https://raw.githubusercontent.com' + rawUrl.slice(0, rawBegin) + rawUrl.slice(rawEnd);
+            }
+            rawEnd += 1;
+        }
+        throw 'Unexpected end of function';
+    }
+
+    /**
+     * Generate gist.githubusercontent.com url for raw file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructGistGitHubUserContentUrl(rawUrl) {
+        return 'https://gist.githubusercontent.com' + rawUrl;
     }
 
     /**
@@ -234,6 +250,7 @@ function initLaTeX() {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
                 url = document.getElementById('raw-url').getAttribute('href');
+                url = constructRawGitHubUserContentUrl(url);
                 addButtonToGroup(groups[0], element, 'btn btn-sm', url);
                 return;
             }
@@ -243,7 +260,9 @@ function initLaTeX() {
                 if (gistElement.length > 0) {
                     gistElement = gistElement[0];
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
-                        addButtonToGroup(groups[0], element, 'btn btn-sm');
+                        url = groups[0].getElementsByClassName('btn')[0].getAttribute('href');
+                        url = constructGistGitHubUserContentUrl(url);
+                        addButtonToGroup(groups[0], element, 'btn btn-sm', url);
                         return;
                     }
                 }
