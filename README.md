@@ -37,6 +37,12 @@ You can see the `LaTeX` button in the following elements:
 
 ![Wiki](https://cloud.githubusercontent.com/assets/853842/17482586/169a7494-5db5-11e6-9454-54abffba0a6f.png)
 
+### Help us improve
+
+Due to the conflict of escape characters (`\`), some escape characters will be missing in LaTeX formulas.
+We will try to recover the characters in some common situations.
+However, if you find your formulas are not rendered correctly, please tell us with [issues](https://github.com/CyberZHG/LaTeXGitHubMarkdown/issues).
+
 ### More details
 
 * The formulas are rendered with [MathJax](https://www.mathjax.org/).
