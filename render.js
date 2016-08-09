@@ -174,14 +174,106 @@ function initLaTeX() {
     }
 
     /**
+     * Generate HTML with raw Markdown text.
+     * First escape the escape characters in raw text, then use GitHub API to compile the text.
+     *
+     * @param {string} url The url that holds the raw Markdown text.
+     * @param {function} callback The first parameter is the compiled text.
+     */
+    function reRender(url, callback) {
+        /**
+         * Add escape characters to LaTeX fomulas.
+         * @param {string} raw Raw Markdown text.
+         * @return {string} The escaped Markdown.
+         */
+        function escapeLaTeXs(raw) {
+            /**
+             * Escape LaTeX formular.
+             *
+             * @param {string} raw
+             * @param {number} begin
+             * @param {number} end
+             *
+             * @return {string}
+             */
+            function escapeLaTex(raw, begin, end) {
+                var idx = begin,
+                    escaped = '';
+                while (idx < end) {
+                    if (raw[idx] === '\\') {
+                        escaped += '\\\\';
+                    } else {
+                        escaped += raw[idx];
+                    }
+                }
+                return escaped;
+            }
+
+            var idx = 0,
+                beginIdx = -1,
+                dollarNum = 0,
+                isEscaped = false,
+                c,
+                dollarBegin,
+                escaped = '';
+            while (idx < raw.length) {
+                c = raw[idx];
+                if (isEscaped) {
+                    escaped += c;
+                    isEscaped = false;
+                } else {
+                    if (c === '\\') {
+                        escaped += c;
+                        isEscaped = true;
+                    } else {
+                        if (c === '$') {
+                            dollarBegin = idx;
+                            while (idx < raw.length && raw[idx] === '$') {
+                                idx += 1;
+                            }
+                        }
+                        if (beginIdx === -1) {
+                            escaped += raw.slice(dollarBegin, idx);
+                            dollarNum = idx - dollarBegin;
+                            if (dollarNum <= 2) {
+                                beginIdx = idx;
+                            }
+                        } else {
+                            if (idx - dollarBegin === dollarNum) {
+                                escaped += escapeLaTex(raw, beginIdx, idx);
+                            } else {
+                                escaped += raw.slice(beginIdx, idx);
+                            }
+                        }
+                    }
+                }
+                idx += 1;
+            }
+            return escaped;
+        }
+
+        get(url, function (success, text) {
+            if (success) {
+                var data = {
+                    'text': escapeLaTeXs(text),
+                    'mode': 'gfm'
+                };
+                post('https://api.github.com/markdown/raw', data, function (success, text) {
+                    if (success) {
+                        callback(text);
+                    }
+                });
+            }
+        });
+    }
+
+    /**
      * Open the page with MathJax inserted.
      *
      * Due to GitHub's strict content security policy, MathJax could not be inserted in the same page.
      * The new page uses the local file system, the function will not work if file system is disabled.
      *
      * @param {function} render The parameter is a callback function that takes the rendered text.
-     *
-     * @return {void}
      */
     function openInNewTab(render) {
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
@@ -222,8 +314,6 @@ function initLaTeX() {
      * @param {Element} group The action group.
      * @param {string} className The class names of the button.
      * @param {function} render The parameter is a callback function that takes the rendered text.
-     *
-     * @return {void}
      */
     function addButtonToGroup(group, className, render) {
         var lock = group.getElementsByClassName('btn-latex'),
@@ -243,8 +333,6 @@ function initLaTeX() {
      * Add the LaTeX button to the Markdown element.
      *
      * @param {Element} element The Markdown element.
-     *
-     * @return {void}
      */
     function addOpenInNewTabButton(element) {
         var groups, gistElement, actions, header;
@@ -253,7 +341,8 @@ function initLaTeX() {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
                 addButtonToGroup(groups[0], 'btn btn-sm', function (callback) {
-                    callback(recover(element));
+                    var url = document.getElementById('raw-url').getAttribute('href');
+                    reRender(url, callback);
                 });
                 return;
             }
