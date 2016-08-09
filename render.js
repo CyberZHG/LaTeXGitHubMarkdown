@@ -33,6 +33,48 @@ function initLaTeX() {
     addToElements(document.getElementsByClassName(TYPE_WIKI));
 
     /**
+     * Get request.
+     * @param {string} url
+     * @param {function} callback The first parameter is the request boolean result, the second parameter is the text.
+     * @return {string}
+     */
+    function get(url, callback) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('GET', url);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+                if (xmlhttp.status === 200) {
+                    callback(true, xmlhttp.responseText);
+                } else {
+                    callback(false, xmlhttp.statusText);
+                }
+            }
+        };
+        xmlhttp.send();
+    }
+
+    /**
+     * Post request.
+     * @param {string} url
+     * @param {function} callback The first parameter is the request boolean result, the second parameter is the text.
+     * @return {string}
+     */
+    function post(url, data, callback) {
+        var xmlhttp = new XMLHttpRequest();
+        xmlhttp.open('POST', url);
+        xmlhttp.onreadystatechange = function () {
+            if (xmlhttp.readyState === XMLHttpRequest.DONE) {
+                if (xmlhttp.status === 200) {
+                    callback(true, xmlhttp.responseText);
+                } else {
+                    callback(false, xmlhttp.statusText);
+                }
+            }
+        };
+        xmlhttp.send(data);
+    }
+
+    /**
      * Try to recover from the conflict of LaTeX and Markdown.
      *
      * @param {Element} element
@@ -137,11 +179,11 @@ function initLaTeX() {
      * Due to GitHub's strict content security policy, MathJax could not be inserted in the same page.
      * The new page uses the local file system, the function will not work if file system is disabled.
      *
-     * @param {Element} element The element that triggered the convertion.
+     * @param {function} render The parameter is a callback function that takes the rendered text.
      *
      * @return {void}
      */
-    function openInNewTab(element) {
+    function openInNewTab(render) {
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
         window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fs) {
             var randomName = Math.floor(Math.random() * 268435455).toString(16) + '.html';
@@ -155,15 +197,17 @@ function initLaTeX() {
                     };
                     var html = document.head.innerHTML,
                         blob;
-                    html += '<body>';
-                    html += recover(element);
-                    html += '<script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
-                    html += '<script type="text/x-mathjax-config">';
-                    html += "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['$$','$$']],displayMath: []}});";
-                    html += '</script>';
-                    html += '</body>';
-                    blob = new Blob([html], {type: 'text/plain'});
-                    writer.write(blob);
+                    render(function (rendered) {
+                        html += '<body>';
+                        html += rendered;
+                        html += '<script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
+                        html += '<script type="text/x-mathjax-config">';
+                        html += "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['$$','$$']],displayMath: []}});";
+                        html += '</script>';
+                        html += '</body>';
+                        blob = new Blob([html], {type: 'text/plain'});
+                        writer.write(blob);
+                    });
                 });
             });
         });
@@ -176,12 +220,12 @@ function initLaTeX() {
      * This is used to prevent duplicated insertion.
      *
      * @param {Element} group The action group.
-     * @param {Element} element The Markdown element.
      * @param {string} className The class names of the button.
+     * @param {function} render The parameter is a callback function that takes the rendered text.
      *
      * @return {void}
      */
-    function addButtonToGroup(group, element, className) {
+    function addButtonToGroup(group, className, render) {
         var lock = group.getElementsByClassName('btn-latex'),
             button = document.createElement('button');
         if (lock.length > 0) {
@@ -189,7 +233,7 @@ function initLaTeX() {
         }
         button.className = className + ' btn-latex';
         button.onclick = function () {
-            openInNewTab(element);
+            openInNewTab(render);
         };
         button.innerHTML = 'LaTeX';
         group.appendChild(button);
@@ -208,7 +252,9 @@ function initLaTeX() {
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], element, 'btn btn-sm');
+                addButtonToGroup(groups[0], 'btn btn-sm', function (callback) {
+                    callback(recover(element));
+                });
                 return;
             }
             groups = element.getElementsByClassName('file-actions');
@@ -217,7 +263,9 @@ function initLaTeX() {
                 if (gistElement.length > 0) {
                     gistElement = gistElement[0];
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
-                        addButtonToGroup(groups[0], element, 'btn btn-sm');
+                        addButtonToGroup(groups[0], 'btn btn-sm', function (callback) {
+                            callback(recover(element));
+                        });
                         return;
                     }
                 }
@@ -227,7 +275,9 @@ function initLaTeX() {
         if (element.className.indexOf(TYPE_COMMENT) >= 0) {
             groups = element.getElementsByClassName('timeline-comment-actions');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], element, 'btn-link timeline-comment-action');
+                addButtonToGroup(groups[0], 'btn-link timeline-comment-action', function (callback) {
+                    callback(recover(element));
+                });
                 return;
             }
         }
@@ -244,7 +294,9 @@ function initLaTeX() {
                     groups = document.createElement('div');
                     groups.className = 'btn-group';
                     actions.appendChild(groups);
-                    addButtonToGroup(groups, element, 'btn btn-sm');
+                    addButtonToGroup(groups, 'btn btn-sm', function (callback) {
+                        callback(recover(element));
+                    });
                     return;
                 }
             }
@@ -256,7 +308,9 @@ function initLaTeX() {
                 actions = document.createElement('div');
                 actions.className = 'gh-header-actions';
                 element.insertBefore(actions, element.firstChild);
-                addButtonToGroup(actions, element, 'btn btn-sm');
+                addButtonToGroup(actions, element, 'btn btn-sm', function (callback) {
+                    callback(recover(element));
+                });
                 return;
             }
         }
