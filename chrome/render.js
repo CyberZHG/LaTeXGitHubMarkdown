@@ -178,10 +178,11 @@ function initLaTeX() {
      * @param {Element} group The action group.
      * @param {Element} element The Markdown element.
      * @param {string} className The class names of the button.
+     * @param {string} rawUrl
      *
      * @return {void}
      */
-    function addButtonToGroup(group, element, className) {
+    function addButtonToGroup(group, element, className, rawUrl) {
         var lock = group.getElementsByClassName('btn-latex'),
             button = document.createElement('button');
         if (lock.length > 0) {
@@ -189,7 +190,31 @@ function initLaTeX() {
         }
         button.className = className + ' btn-latex';
         button.onclick = function () {
-            openInNewTab(element);
+            if (rawUrl === undefined) {
+                openInNewTab(element);
+            } else {
+                var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/raw?',
+                    rawBegin = -1,
+                    rawEnd = 0,
+                    cnt = 0;
+                while (rawEnd < rawUrl.length) {
+                    if (rawUrl[rawEnd] === '/') {
+                        cnt += 1;
+                    }
+                    if (cnt === 3 && rawBegin === -1) {
+                        rawBegin = rawEnd;
+                    }
+                    if (cnt === 4) {
+                        rawUrl = rawUrl.slice(0, rawBegin) + rawUrl.slice(rawEnd);
+                        console.log(rawUrl);
+                        break;
+                    }
+                    rawEnd += 1;
+                }
+                url += 'url=' + encodeURIComponent('https://raw.githubusercontent.com' + rawUrl);
+                url += '&escape=1';
+                window.open(url);
+            }
         };
         button.innerHTML = 'LaTeX';
         group.appendChild(button);
@@ -203,12 +228,13 @@ function initLaTeX() {
      * @return {void}
      */
     function addOpenInNewTabButton(element) {
-        var groups, gistElement, actions, header;
-        /** Gist files. */
+        var groups, gistElement, actions, header, url;
+        /** Markdown and gist files. */
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], element, 'btn btn-sm');
+                url = document.getElementById('raw-url').getAttribute('href');
+                addButtonToGroup(groups[0], element, 'btn btn-sm', url);
                 return;
             }
             groups = element.getElementsByClassName('file-actions');
@@ -231,7 +257,7 @@ function initLaTeX() {
                 return;
             }
         }
-        /** Markdown files. */
+        /** ReadMe files. */
         if (element.className.indexOf(TYPE_README) >= 0) {
             actions = element.getElementsByClassName('file-actions');
             header = element.getElementsByClassName('markdown-body');
