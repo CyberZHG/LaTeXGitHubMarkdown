@@ -33,6 +33,105 @@ function initLaTeX() {
     addToElements(document.getElementsByClassName(TYPE_WIKI));
 
     /**
+     * Try to recover from the conflict of LaTeX and Markdown.
+     *
+     * @param {Element} element
+     *
+     * @return {string} The recovered HTML string.
+     */
+    function recover(element) {
+
+        var ELEMENT_TYPE_LATEX = 'latex',
+            ELEMENT_TYPE_LEAF = 'leaf',
+            ELEMENT_TYPE_INNER = 'inner';
+
+        /**
+         * Find and distinguish the LaTeX parts and other HTML parts.
+         *
+         * @param {Element} element
+         *
+         * @return {object} A tree-shaped object.
+         *     The corresponding value of the key 'type' could be 'latex', 'inner' and 'leaf'.
+         *     If the 'type' is 'latex', then a 'text' field must provided containing the raw LaTeX formula.
+         *     If the 'type' is 'inner', the corresponding value of the key 'child' is an array contains the
+         *     children objects in a sequential order.
+         *     If the 'type' is 'leaf', then a 'text' field must provided containing the HTML text.
+         *     without the opening and ending symbol.
+         */
+        function parse(element) {
+            if (!element.children.hasOwnProperty('length') || element.children.length === 0) {
+                return {
+                    'type': ELEMENT_TYPE_LEAF,
+                    'child': [],
+                    'text': element.outerHTML
+                };
+            }
+            return {
+                'type': ELEMENT_TYPE_INNER,
+                'child': Array.prototype.map.call(element.childNodes, parse),
+                'open': '<' + element.tagName + Array.prototype.map.call(element.attributes, function (attr) {
+                    return ' ' + attr.name + '="' + attr.value.replace('"', '&quot;') + '"';
+                }).join('') + '>',
+                'close': '</' + element.tagName + '>'
+            };
+        }
+
+        /**
+         * The actual recovery function.
+         *
+         * @param {object} latex
+         *
+         * @return {object} Same as the parameter.
+         */
+        function recoverElement(latex) {
+            return latex;
+        }
+
+        /**
+         * Iterate the parsed element and try to recover.
+         *
+         * @param {object} element
+         *
+         * @return {object} Same structure with the parsed element.
+         */
+        function recoverElements(element) {
+            if (element.type === ELEMENT_TYPE_LATEX) {
+                return recoverElement(element);
+            }
+            if (element.type === ELEMENT_TYPE_LEAF) {
+                return element;
+            }
+            if (element.type === ELEMENT_TYPE_INNER) {
+                element.child = element.child.map(recoverElements);
+                return element;
+            }
+            throw 'Unexpected end of function';
+        }
+
+        /**
+         * Convert the parsed and recovered elements to HTML string.
+         *
+         * @param {object} element The recovered element.
+         *
+         * @return {string} HTML string.
+         */
+        function toString(element) {
+            if (element.type === ELEMENT_TYPE_LATEX) {
+                return '$$' + element.text + '$$';
+            }
+            if (element.type === ELEMENT_TYPE_LEAF) {
+                return element.text;
+            }
+            if (element.type === ELEMENT_TYPE_INNER) {
+                return element.open + element.child.map(toString).join('') + element.close;
+            }
+            throw 'Unexpected end of function';
+        }
+
+        return toString(recoverElements(parse(element)));
+    }
+
+    /**
      * Open the page with MathJax inserted.
      *
      * Due to GitHub's strict content security policy, MathJax could not be inserted in the same page.
@@ -57,7 +156,7 @@ function initLaTeX() {
                     var html = document.head.innerHTML,
                         blob;
                     html += '<body>';
-                    html += element.innerHTML;
+                    html += recover(element);
                     html += '<script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
                     html += '<script type="text/x-mathjax-config">';
                     html += "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['$$','$$']],displayMath: []}});";
@@ -135,13 +234,13 @@ function initLaTeX() {
         /** Markdown files. */
         if (element.className.indexOf(TYPE_README) >= 0) {
             actions = element.getElementsByClassName('file-actions');
-            header = element.getElementsByTagName('h3');
+            header = element.getElementsByClassName('markdown-body');
             if (actions.length === 0) {
                 if (header.length > 0) {
                     header = header[0];
                     actions = document.createElement('div');
                     actions.className = 'file-actions';
-                    header.appendChild(actions);
+                    header.insertBefore(actions, header.firstChild);
                     groups = document.createElement('div');
                     groups.className = 'btn-group';
                     actions.appendChild(groups);
