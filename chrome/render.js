@@ -69,7 +69,7 @@ function initLaTeX() {
                     localHtml += '<script>';
                     localHtml += '\n' +
                             'var frame = document.getElementById("local_frame"),\n' +
-                            '    url = "https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/html?",\n' +
+                            '    url = "https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/html?",\n' +
                             '    key = "html_" + Math.floor(Math.random() * 65535).toString(16),\n' +
                             '    data = {\n' +
                             '        key: key,\n' +
@@ -82,7 +82,7 @@ function initLaTeX() {
                             '    window.open(url);\n' +
                             '    window.close();\n' +
                             '};\n' +
-                            'frame.src = "https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/local";\n';
+                            'frame.src = "https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/local";\n';
                     localHtml += '</script>\n';
                     localHtml += '</body>\n';
                     localHtml += '</html>\n';
