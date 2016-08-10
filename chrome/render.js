@@ -235,6 +235,21 @@ function initLaTeX() {
     }
 
     /**
+     * Generate raw.githubusercontent.com url for README.md file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructReadMeGitHubUserContentUrl(rawUrl) {
+        var parts = rawUrl.split('/');
+        if (parts.length === 3) {
+            rawUrl = parts.slice(0, 3).concat(parts.slice(4)).concat('master').join('/');
+        } else {
+            rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
+        }
+        return 'https://raw.githubusercontent.com' + rawUrl + '/README.md';
+    }
+
+    /**
      * Add the LaTeX button to the Markdown element.
      *
      * @param {Element} element The Markdown element.
@@ -287,7 +302,9 @@ function initLaTeX() {
                     groups = document.createElement('div');
                     groups.className = 'btn-group';
                     actions.appendChild(groups);
-                    addButtonToGroup(groups, element, 'btn btn-sm');
+                    url = window.location.pathname;
+                    url = constructReadMeGitHubUserContentUrl(url);
+                    addButtonToGroup(groups, element, 'btn btn-sm', url);
                     return;
                 }
             }
