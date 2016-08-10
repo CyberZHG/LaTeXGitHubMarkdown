@@ -209,22 +209,9 @@ function initLaTeX() {
      * @return {string}
      */
     function constructRawGitHubUserContentUrl(rawUrl) {
-        var rawBegin = -1,
-            rawEnd = 0,
-            cnt = 0;
-        while (rawEnd < rawUrl.length) {
-            if (rawUrl[rawEnd] === '/') {
-                cnt += 1;
-            }
-            if (cnt === 3 && rawBegin === -1) {
-                rawBegin = rawEnd;
-            }
-            if (cnt === 4) {
-                return 'https://raw.githubusercontent.com' + rawUrl.slice(0, rawBegin) + rawUrl.slice(rawEnd);
-            }
-            rawEnd += 1;
-        }
-        throw 'Unexpected end of function';
+        var parts = rawUrl.split('/');
+        rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
+        return 'https://raw.githubusercontent.com' + rawUrl;
     }
 
     /**
@@ -234,6 +221,17 @@ function initLaTeX() {
      */
     function constructGistGitHubUserContentUrl(rawUrl) {
         return 'https://gist.githubusercontent.com' + rawUrl;
+    }
+
+    /**
+     * Generate raw.githubusercontent.com url for wiki file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructWikiGitHubUserContentUrl(rawUrl) {
+        var parts = rawUrl.split('/');
+        rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
+        return 'https://raw.githubusercontent.com/wiki' + rawUrl + '.md';
     }
 
     /**
@@ -301,7 +299,10 @@ function initLaTeX() {
                 actions = document.createElement('div');
                 actions.className = 'gh-header-actions';
                 element.insertBefore(actions, element.firstChild);
-                addButtonToGroup(actions, element, 'btn btn-sm');
+                url = window.location.pathname;
+                url = constructWikiGitHubUserContentUrl(url);
+                console.log(url);
+                addButtonToGroup(actions, element, 'btn btn-sm', url);
                 return;
             }
         }
