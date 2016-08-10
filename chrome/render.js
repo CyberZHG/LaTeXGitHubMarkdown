@@ -117,7 +117,7 @@ function initLaTeX() {
             if (rawUrl === undefined) {
                 openWithLocal(html);
             } else {
-                var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/raw?';
+                var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/raw?';
                 url += 'url=' + encodeURIComponent(rawUrl);
                 url += '&escape=1';
                 window.open(url);
