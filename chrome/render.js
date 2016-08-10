@@ -33,105 +33,6 @@ function initLaTeX() {
     addToElements(document.getElementsByClassName(TYPE_WIKI));
 
     /**
-     * Try to recover from the conflict of LaTeX and Markdown.
-     *
-     * @param {Element} element
-     *
-     * @return {string} The recovered HTML string.
-     */
-    function recover(element) {
-
-        var ELEMENT_TYPE_LATEX = 'latex',
-            ELEMENT_TYPE_LEAF = 'leaf',
-            ELEMENT_TYPE_INNER = 'inner';
-
-        /**
-         * Find and distinguish the LaTeX parts and other HTML parts.
-         *
-         * @param {Element} element
-         *
-         * @return {object} A tree-shaped object.
-         *     The corresponding value of the key 'type' could be 'latex', 'inner' and 'leaf'.
-         *     If the 'type' is 'latex', then a 'text' field must provided containing the raw LaTeX formula.
-         *     If the 'type' is 'inner', the corresponding value of the key 'child' is an array contains the
-         *     children objects in a sequential order.
-         *     If the 'type' is 'leaf', then a 'text' field must provided containing the HTML text.
-         *     without the opening and ending symbol.
-         */
-        function parse(element) {
-            if (!element.children.hasOwnProperty('length') || element.children.length === 0) {
-                return {
-                    'type': ELEMENT_TYPE_LEAF,
-                    'child': [],
-                    'text': element.outerHTML
-                };
-            }
-            return {
-                'type': ELEMENT_TYPE_INNER,
-                'child': Array.prototype.map.call(element.childNodes, parse),
-                'open': '<' + element.tagName + Array.prototype.map.call(element.attributes, function (attr) {
-                    return ' ' + attr.name + '="' + attr.value.replace('"', '&quot;') + '"';
-                }).join('') + '>',
-                'close': '</' + element.tagName + '>'
-            };
-        }
-
-        /**
-         * The actual recovery function.
-         *
-         * @param {object} latex
-         *
-         * @return {object} Same as the parameter.
-         */
-        function recoverElement(latex) {
-            return latex;
-        }
-
-        /**
-         * Iterate the parsed element and try to recover.
-         *
-         * @param {object} element
-         *
-         * @return {object} Same structure with the parsed element.
-         */
-        function recoverElements(element) {
-            if (element.type === ELEMENT_TYPE_LATEX) {
-                return recoverElement(element);
-            }
-            if (element.type === ELEMENT_TYPE_LEAF) {
-                return element;
-            }
-            if (element.type === ELEMENT_TYPE_INNER) {
-                element.child = element.child.map(recoverElements);
-                return element;
-            }
-            throw 'Unexpected end of function';
-        }
-
-        /**
-         * Convert the parsed and recovered elements to HTML string.
-         *
-         * @param {object} element The recovered element.
-         *
-         * @return {string} HTML string.
-         */
-        function toString(element) {
-            if (element.type === ELEMENT_TYPE_LATEX) {
-                return '$$' + element.text + '$$';
-            }
-            if (element.type === ELEMENT_TYPE_LEAF) {
-                return element.text;
-            }
-            if (element.type === ELEMENT_TYPE_INNER) {
-                return element.open + element.child.map(toString).join('') + element.close;
-            }
-            throw 'Unexpected end of function';
-        }
-
-        return toString(recoverElements(parse(element)));
-    }
-
-    /**
      * Open the page with MathJax inserted.
      *
      * Due to GitHub's strict content security policy, MathJax could not be inserted in the same page.
@@ -141,7 +42,7 @@ function initLaTeX() {
      *
      * @return {void}
      */
-    function openInNewTab(element) {
+    function openWithLocal(html) {
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
         window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fs) {
             var randomName = Math.floor(Math.random() * 268435455).toString(16) + '.html';
@@ -153,16 +54,39 @@ function initLaTeX() {
                     writer.onwriteend = function () {
                         window.open(file.toURL());
                     };
-                    var html = document.head.innerHTML,
+                    var localHtml = '',
                         blob;
-                    html += '<body>';
-                    html += recover(element);
-                    html += '<script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
-                    html += '<script type="text/x-mathjax-config">';
-                    html += "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['$$','$$']],displayMath: []}});";
-                    html += '</script>';
-                    html += '</body>';
-                    blob = new Blob([html], {type: 'text/plain'});
+                    localHtml += '<html>\n';
+                    localHtml += '<head>\n';
+                    localHtml += '<title>LaTeX GitHub Markdown</title>\n';
+                    localHtml += '</head>\n';
+                    localHtml += '<body>\n';
+                    localHtml += 'Redirecting...<br>Please allow opening a new window.\n';
+                    localHtml += '<div id="html" hidden>\n';
+                    localHtml += html;
+                    localHtml += '</div>\n';
+                    localHtml += '<iframe id="local_frame" src="" hidden></iframe>\n';
+                    localHtml += '<script>';
+                    localHtml += '\n' +
+                            'var frame = document.getElementById("local_frame"),\n' +
+                            '    url = "https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/html?",\n' +
+                            '    key = "html_" + Math.floor(Math.random() * 65535).toString(16),\n' +
+                            '    data = {\n' +
+                            '        key: key,\n' +
+                            '        html: document.getElementById("html").innerHTML\n' +
+                            '    };\n' +
+                            'frame.onload = function () {\n' +
+                            '    frame.contentWindow.postMessage(JSON.stringify(data), "*");\n' +
+                            '    url += "key=" + key;\n' +
+                            '    url += "&escaped=1";\n' +
+                            '    window.open(url);\n' +
+                            '    window.close();\n' +
+                            '};\n' +
+                            'frame.src = "https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/local";\n';
+                    localHtml += '</script>\n';
+                    localHtml += '</body>\n';
+                    localHtml += '</html>\n';
+                    blob = new Blob([localHtml], {type: 'text/plain'});
                     writer.write(blob);
                 });
             });
@@ -176,12 +100,13 @@ function initLaTeX() {
      * This is used to prevent duplicated insertion.
      *
      * @param {Element} group The action group.
-     * @param {Element} element The Markdown element.
      * @param {string} className The class names of the button.
+     * @param {string} html The rendered Markdown.
+     * @param {string} rawUrl
      *
      * @return {void}
      */
-    function addButtonToGroup(group, element, className) {
+    function addButtonToGroup(group, className, html, rawUrl) {
         var lock = group.getElementsByClassName('btn-latex'),
             button = document.createElement('button');
         if (lock.length > 0) {
@@ -189,10 +114,71 @@ function initLaTeX() {
         }
         button.className = className + ' btn-latex';
         button.onclick = function () {
-            openInNewTab(element);
+            if (rawUrl === undefined) {
+                openWithLocal(html);
+            } else {
+                var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/raw?';
+                url += 'url=' + encodeURIComponent(rawUrl);
+                url += '&escape=1';
+                window.open(url);
+            }
         };
         button.innerHTML = 'LaTeX';
         group.appendChild(button);
+    }
+
+    /**
+     * Check if the current repository is private.
+     * @return {boolean}
+     */
+    function isPrivateRepo() {
+        return document.getElementsByClassName('label-private').length > 0;
+    }
+
+    /**
+     * Generate raw.githubusercontent.com url for raw file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructRawGitHubUserContentUrl(rawUrl) {
+        var parts = rawUrl.split('/');
+        rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
+        return 'https://raw.githubusercontent.com' + rawUrl;
+    }
+
+    /**
+     * Generate gist.githubusercontent.com url for raw file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructGistGitHubUserContentUrl(rawUrl) {
+        return 'https://gist.githubusercontent.com' + rawUrl;
+    }
+
+    /**
+     * Generate raw.githubusercontent.com url for wiki file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructWikiGitHubUserContentUrl(rawUrl) {
+        var parts = rawUrl.split('/');
+        rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
+        return 'https://raw.githubusercontent.com/wiki' + rawUrl + '.md';
+    }
+
+    /**
+     * Generate raw.githubusercontent.com url for README.md file.
+     * @param {string} rawUrl
+     * @return {string}
+     */
+    function constructReadMeGitHubUserContentUrl(rawUrl) {
+        var parts = rawUrl.split('/');
+        if (parts.length === 3) {
+            rawUrl = parts.slice(0, 3).concat(parts.slice(4)).concat('master').join('/');
+        } else {
+            rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
+        }
+        return 'https://raw.githubusercontent.com' + rawUrl + '/README.md';
     }
 
     /**
@@ -203,21 +189,34 @@ function initLaTeX() {
      * @return {void}
      */
     function addOpenInNewTabButton(element) {
-        var groups, gistElement, actions, header;
-        /** Gist files. */
+        var groups, gistElement, actions, header, url;
+        /** Markdown files. */
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('btn-group');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], element, 'btn btn-sm');
+                if (isPrivateRepo()) {
+                    element = element.getElementsByClassName('markdown-body');
+                    if (element.length > 0) {
+                        element = element[0].innerHTML;
+                        addButtonToGroup(groups[0], 'btn btn-sm', element);
+                    }
+                } else {
+                    url = document.getElementById('raw-url').getAttribute('href');
+                    url = constructRawGitHubUserContentUrl(url);
+                    addButtonToGroup(groups[0], 'btn btn-sm', '', url);
+                }
                 return;
             }
+            /** Gist files. */
             groups = element.getElementsByClassName('file-actions');
             if (groups.length > 0) {
                 gistElement = element.getElementsByClassName('gist-blob-name');
                 if (gistElement.length > 0) {
                     gistElement = gistElement[0];
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
-                        addButtonToGroup(groups[0], element, 'btn btn-sm');
+                        url = groups[0].getElementsByClassName('btn')[0].getAttribute('href');
+                        url = constructGistGitHubUserContentUrl(url);
+                        addButtonToGroup(groups[0], 'btn btn-sm', '', url);
                         return;
                     }
                 }
@@ -227,11 +226,15 @@ function initLaTeX() {
         if (element.className.indexOf(TYPE_COMMENT) >= 0) {
             groups = element.getElementsByClassName('timeline-comment-actions');
             if (groups.length > 0) {
-                addButtonToGroup(groups[0], element, 'btn-link timeline-comment-action');
+                element = element.getElementsByClassName('markdown-body');
+                if (element.length > 0) {
+                    element = element[0].innerHTML;
+                    addButtonToGroup(groups[0], 'btn-link timeline-comment-action', element);
+                }
                 return;
             }
         }
-        /** Markdown files. */
+        /** ReadMe files. */
         if (element.className.indexOf(TYPE_README) >= 0) {
             actions = element.getElementsByClassName('file-actions');
             header = element.getElementsByClassName('markdown-body');
@@ -240,11 +243,21 @@ function initLaTeX() {
                     header = header[0];
                     actions = document.createElement('div');
                     actions.className = 'file-actions';
-                    header.insertBefore(actions, header.firstChild);
+                    element.insertBefore(actions, element.firstChild);
                     groups = document.createElement('div');
                     groups.className = 'btn-group';
                     actions.appendChild(groups);
-                    addButtonToGroup(groups, element, 'btn btn-sm');
+                    if (isPrivateRepo()) {
+                        element = element.getElementsByClassName('markdown-body');
+                        if (element.length > 0) {
+                            element = element[0].innerHTML;
+                            addButtonToGroup(groups, 'btn btn-sm', element);
+                        }
+                    } else {
+                        url = window.location.pathname;
+                        url = constructReadMeGitHubUserContentUrl(url);
+                        addButtonToGroup(groups, 'btn btn-sm', '', url);
+                    }
                     return;
                 }
             }
@@ -256,7 +269,17 @@ function initLaTeX() {
                 actions = document.createElement('div');
                 actions.className = 'gh-header-actions';
                 element.insertBefore(actions, element.firstChild);
-                addButtonToGroup(actions, element, 'btn btn-sm');
+                if (isPrivateRepo()) {
+                    element = element.getElementsByClassName('markdown-body');
+                    if (element.length > 0) {
+                        element = element[0].innerHTML;
+                        addButtonToGroup(actions, 'btn btn-sm', element);
+                    }
+                } else {
+                    url = window.location.pathname;
+                    url = constructWikiGitHubUserContentUrl(url);
+                    addButtonToGroup(actions, 'btn btn-sm', '', url);
+                }
                 return;
             }
         }
