@@ -42,7 +42,7 @@ function initLaTeX() {
      *
      * @return {void}
      */
-    function openWithLocal(element) {
+    function openWithLocal(html) {
         window.requestFileSystem = window.requestFileSystem || window.webkitRequestFileSystem;
         window.requestFileSystem(window.TEMPORARY, 1024 * 1024, function (fs) {
             var randomName = Math.floor(Math.random() * 268435455).toString(16) + '.html';
@@ -54,16 +54,39 @@ function initLaTeX() {
                     writer.onwriteend = function () {
                         window.open(file.toURL());
                     };
-                    var html = document.head.innerHTML,
+                    var localHtml = '',
                         blob;
-                    html += '<body>';
-                    html += element;
-                    html += '<script async src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>';
-                    html += '<script type="text/x-mathjax-config">';
-                    html += "MathJax.Hub.Config({tex2jax: {inlineMath: [['$','$'], ['$$','$$']],displayMath: []}});";
-                    html += '</script>';
-                    html += '</body>';
-                    blob = new Blob([html], {type: 'text/plain'});
+                    localHtml += '<html>\n';
+                    localHtml += '<head>\n';
+                    localHtml += '<title>LaTeX GitHub Markdown</title>\n';
+                    localHtml += '</head>\n';
+                    localHtml += '<body>\n';
+                    localHtml += 'Redirecting...<br>Please allow opening a new window.\n';
+                    localHtml += '<div id="html" hidden>\n';
+                    localHtml += html;
+                    localHtml += '</div>\n';
+                    localHtml += '<iframe id="local_frame" src="" hidden></iframe>\n';
+                    localHtml += '<script>';
+                    localHtml += '\n' +
+                            'var frame = document.getElementById("local_frame"),\n' +
+                            '    url = "https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/html?",\n' +
+                            '    key = "html_" + Math.floor(Math.random() * 65535).toString(16),\n' +
+                            '    data = {\n' +
+                            '        key: key,\n' +
+                            '        html: document.getElementById("html").innerHTML\n' +
+                            '    };\n' +
+                            'frame.onload = function () {\n' +
+                            '    frame.contentWindow.postMessage(JSON.stringify(data), "*");\n' +
+                            '    url += "key=" + key;\n' +
+                            '    url += "&escaped=1";\n' +
+                            '    window.open(url);\n' +
+                            '    window.close();\n' +
+                            '};\n' +
+                            'frame.src = "https://cyberzhg.github.io/LaTeXGitHubMarkdown/render/local";\n';
+                    localHtml += '</script>\n';
+                    localHtml += '</body>\n';
+                    localHtml += '</html>\n';
+                    blob = new Blob([localHtml], {type: 'text/plain'});
                     writer.write(blob);
                 });
             });
