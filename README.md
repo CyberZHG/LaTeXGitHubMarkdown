@@ -8,9 +8,8 @@ LaTeX GitHub Markdown
 
 ### Installation
 
-[![Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_206x58.png)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
-
-[Firefox Add-ons](https://addons.mozilla.org/en-US/firefox/addon/latex-github-markdown/)
+[![Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_340x96.png)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
+[![Firefox Add-ons](https://www.mozilla.org/media/img/styleguide/identity/firefox/usage-standard.dd994d6216e9.png)](https://addons.mozilla.org/en-US/firefox/addon/latex-github-markdown/)
 
 ### Introduction
 
