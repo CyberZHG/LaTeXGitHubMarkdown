@@ -4,21 +4,11 @@ $(document).ready(function () {
     'use strict';
 
     /**
-     * Get value from query string.
-     * @param {string} name
-     * @return {string}
-     */
-    function getParameterByName(name) {
-        var match = (new RegExp('[?&]' + name + '=([^&]*)')).exec(window.location.search);
-        return match && decodeURIComponent(match[1].replace(/\+/g, ' '));
-    }
-
-    /**
      * Get raw Markdown text from the given url in the query string.
      * @param {function} callback
      */
     function getRawContent(callback) {
-        var url = getParameterByName('url');
+        var url = window.getParameterByName('url');
         if (!url) {
             url = 'https://raw.githubusercontent.com/CyberZHG/LaTeXGitHubMarkdown/master/README.md';
         }
