@@ -1,0 +1,11 @@
+language: node_js
+branches:
+  only:
+    - gh-pages
+    - /.*/
+install:
+  - npm install -g jslint
+before_script:
+  - find . -type f -regex "\./[a-z]+/[a-zA-Z_]+\.js" -print0 | xargs -0 jslint
+script:
+  - ls
