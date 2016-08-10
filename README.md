@@ -17,23 +17,23 @@ Following is an example:
 
 $$\nabla \times \mathbf{B} = \displaystyle \mu_0\mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}} {\partial t}$$
 
-If you successfully installed this extension, you can see `LaTeX` buttons in the right-top corner of Markdown documents.
+If you successfully installed this extension, you can see a `LaTeX` button in the right-top corner of this Markdown document.
 
-You can see the `LaTeX` button in the following elements:
+You can see the `LaTeX` buttons in the following elements:
 
-* The Markdown file in a repository.
+* A Markdown file in a repository.
 
 ![README.md](https://cloud.githubusercontent.com/assets/853842/17482634/446e99f4-5db5-11e6-9ec2-55c976dfe970.png)
 
-* The comments in a issue.
+* The comments in an issue.
 
 ![Issue](https://cloud.githubusercontent.com/assets/853842/17482548/df9b9f40-5db4-11e6-8544-d00bf0c05a9c.png)
 
-* Gist file whose extension is `.md`.
+* A gist file whose extension is `.md`.
 
 ![Gist](https://cloud.githubusercontent.com/assets/853842/17482705/982472e4-5db5-11e6-9498-ea2913803f60.png)
 
-* Wiki page.
+* A wiki page.
 
 ![Wiki](https://cloud.githubusercontent.com/assets/853842/17482586/169a7494-5db5-11e6-9454-54abffba0a6f.png)
 
@@ -42,6 +42,10 @@ You can see the `LaTeX` button in the following elements:
 Due to the conflict of escape characters (`\`), some escape characters will be missing in LaTeX formulas.
 We will try to recover the characters in some common situations.
 However, if you find your formulas are not rendered correctly, please tell us with [issues](https://github.com/CyberZHG/LaTeXGitHubMarkdown/issues).
+
+### About private repos
+
+We use local storage to store the rendered contents for private repositories, the results could only be viewed in your own browser.
 
 ### More details
 
