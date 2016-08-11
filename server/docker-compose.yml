@@ -1,0 +1,9 @@
+version: '2'
+services:
+  web:
+    build: .
+    command: bundle exec rails -s -p 8010 -b '0.0.0.0'
+    volumes:
+      - ./app:/app
+    ports:
+      - "8010:8010"

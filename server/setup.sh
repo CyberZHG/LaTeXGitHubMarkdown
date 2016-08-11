@@ -12,3 +12,6 @@ apt-get install -y docker-engine
 apt-get install -y python-pip
 
 pip install docker-compose
+
+apt-get install -y ruby
+apt-get install -y bundler
