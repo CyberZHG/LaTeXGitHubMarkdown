@@ -36,12 +36,17 @@ $(document).ready(function () {
 
     getRawContent(function (success, raw) {
         if (success) {
-            var data = {
-                'text': escape(raw),
-                'mode': 'markdown'
-            };
+            var token = localStorage.getItem('latex_github_markdown_access_token'),
+                data = {
+                    'text': escape(raw),
+                    'mode': 'markdown'
+                };
+            console.log(token);
+            if (token) {
+                data.access_token = token;
+            }
             $.ajax({
-                url: 'https://api.github.com/markdown',
+                url: 'https://api.github.com/markdown?access_token=' + token,
                 type: 'POST',
                 contentType: 'application/json',
                 dataType: 'text',
