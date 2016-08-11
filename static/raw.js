@@ -42,7 +42,6 @@ $(document).ready(function () {
                     'text': escape(raw),
                     'mode': 'markdown'
                 };
-            console.log(token);
             if (token) {
                 url += '?access_token=' + token;
                 data.access_token = token;
