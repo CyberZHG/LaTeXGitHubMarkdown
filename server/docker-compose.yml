@@ -6,5 +6,6 @@ services:
       - .env
     volumes:
       - ./app:/app
+    restart: always
     ports:
       - "8001:80"
