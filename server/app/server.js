@@ -1,3 +1,4 @@
+/*jslint es6 */
 'use strict';
 
 const express = require('express');
@@ -14,9 +15,10 @@ app.get('/auth', function (req, res) {
             client_secret: process.env.CLIENT_SECRET,
             code: req.query.code
         }
-    }, function(err, httpResponse, body) {
+    }, function (err, httpResponse, body) {
         if (err) {
             res.write(err);
+            res.write(httpResponse);
         } else {
             res.redirect('https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/access?token=' + body.access_token);
         }
