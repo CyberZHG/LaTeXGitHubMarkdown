@@ -1,2 +1,2 @@
-docker pull registry.cn-hangzhou.aliyuncs.com/acs/ruby
-docker tag registry.cn-hangzhou.aliyuncs.com/acs/ruby:latest ruby:latest
+docker pull registry.cn-hangzhou.aliyuncs.com/acs-sample/node
+docker tag registry.cn-hangzhou.aliyuncs.com/acs-sample/node:latest node:latest

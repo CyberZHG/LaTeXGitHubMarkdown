@@ -1,12 +1,11 @@
-FROM ruby
+FROM node
 
-RUN apt-get update -qq && apt-get install -y build-essential
 RUN mkdir /app
-
 WORKDIR /app
+ADD ./app /app
 
-ADD Gemfile /app/Gemfile
-ADD Gemfile.lock /app/Gemfile.lock
+RUN npm install --registry https://registry.npm.taobao.org
 
-RUN bundle install
-ADD . /app
+EXPOSE 80
+
+CMD ["npm", "start"]
