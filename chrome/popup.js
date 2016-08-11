@@ -8,6 +8,9 @@ $(document).ready(function () {
         });
         window.close();
     });
+    $('#button_access').on('click', function () {
+        chrome.tabs.create({url: 'https://github.com/login/oauth/authorize?client_id=17b967fc39122956bcc2'});
+    });
     $('#button_github').on('click', function () {
         chrome.tabs.create({url: 'https://github.com/CyberZHG/LaTeXGitHubMarkdown/'});
     });
