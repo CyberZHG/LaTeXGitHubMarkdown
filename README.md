@@ -47,9 +47,11 @@ However, if you find your formulas are not rendered correctly, please tell us wi
 
 ### About private repos
 
-We use local storage to store the rendered contents for private repositories, the results could only be viewed in your own browser.
+We use local storage to store the rendered contents for private repositories, the results could only be viewed in your own browser. And the contents will be deleted immediately.
 
 ### More details
 
 * The formulas are rendered with [MathJax](https://www.mathjax.org/).
 * Due to content security policy, we cannot render the formulas in the same page.
+* Some countries may have trouble loading MathJax because of their network conditions.
+But since you are using GitHub, we assume that you know how to handle this.
