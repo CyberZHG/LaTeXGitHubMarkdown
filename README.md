@@ -9,7 +9,6 @@ LaTeX GitHub Markdown
 ### Installation
 
 [![Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_340x96.png)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
-[![Firefox Add-ons](https://www.mozilla.org/media/img/styleguide/identity/firefox/usage-standard.dd994d6216e9.png)](https://addons.mozilla.org/en-US/firefox/addon/latex-github-markdown/)
 
 ### Introduction
 
@@ -53,5 +52,3 @@ We use local storage to store the rendered contents for private repositories, th
 
 * The formulas are rendered with [MathJax](https://www.mathjax.org/).
 * Due to content security policy, we cannot render the formulas in the same page.
-* Some countries may have trouble loading MathJax because of their network conditions.
-But since you are using GitHub, we assume that you know how to handle this.
