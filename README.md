@@ -2,9 +2,9 @@ LaTeX GitHub Markdown
 =====================
 
 [![travis-ci](https://travis-ci.org/CyberZHG/LaTeXGitHubMarkdown.svg)](https://travis-ci.org/CyberZHG/LaTeXGitHubMarkdown)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/price/bembdpjahbkabjdpdgdmalckbbcglhjb.svg?maxAge=2592000)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bembdpjahbkabjdpdgdmalckbbcglhjb.svg?maxAge=2592000)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/d/bembdpjahbkabjdpdgdmalckbbcglhjb.svg?maxAge=2592000)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
-[![Gratipay User](https://img.shields.io/gratipay/user/CyberZHG.svg?maxAge=2592000)](https://gratipay.com/~CyberZHG/)
 
 ### Installation
 
