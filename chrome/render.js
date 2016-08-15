@@ -1,5 +1,5 @@
 /*jslint browser: true*/
-/*global console, window, Blob*/
+/*global console, window, Blob, location*/
 
 /** Add LaTeX buttons. */
 function initLaTeX() {
@@ -31,6 +31,14 @@ function initLaTeX() {
     addToElements(document.getElementsByClassName(TYPE_FILE));
     addToElements(document.getElementsByClassName(TYPE_COMMENT));
     addToElements(document.getElementsByClassName(TYPE_WIKI));
+
+    /**
+     * Get the current url without query string.
+     * @return {string}
+     */
+    function getUrlWithoutQuery() {
+        return [location.protocol, '//', location.host, location.pathname].join('');
+    }
 
     /**
      * Open the page with MathJax inserted.
@@ -78,6 +86,7 @@ function initLaTeX() {
                             'frame.onload = function () {\n' +
                             '    frame.contentWindow.postMessage(JSON.stringify(data), "*");\n' +
                             '    url += "key=" + key;\n' +
+                            '    url += "&origin=' + encodeURIComponent(getUrlWithoutQuery()) + '";\n' +
                             '    url += "&escaped=1";\n' +
                             '    window.open(url);\n' +
                             '    window.close();\n' +
@@ -119,6 +128,7 @@ function initLaTeX() {
             } else {
                 var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/raw?';
                 url += 'url=' + encodeURIComponent(rawUrl);
+                url += '&origin=' + encodeURIComponent(getUrlWithoutQuery());
                 url += '&escape=1';
                 window.open(url);
             }
