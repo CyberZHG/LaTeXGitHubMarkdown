@@ -10,17 +10,62 @@ if (typeof require === 'function') {
  * @param {string} raw
  * @return {string}
  */
-function escape(raw) {
+function escape(text) {
     'use strict';
-    var tokens;
-    marked.setOptions({
-        gfm: true,
-        tables: true,
-        breaks: true
-    });
-    tokens = marked.lexer(raw);
-    console.log(tokens);
-    return raw;
+    var escaped = false,
+        begin = -1,
+        end = 0,
+        iter = -1,
+        dollarNum = 0,
+        targets = [],
+        result = '';
+    while (end < text.length) {
+        if (escaped) {
+            escaped = false;
+            end += 1;
+        } else if (text[end] === '\\') {
+            escaped = true;
+            end += 1;
+        } else if (text[end] === '$') {
+            if (begin === -1) {
+                begin = end;
+                while (end < text.length && text[end] === '$') {
+                    end += 1;
+                }
+                dollarNum = end - begin;
+                if (dollarNum > 2) {
+                    begin = -1;
+                }
+            } else {
+                while (end < text.length && text[end] === '$') {
+                    dollarNum -= 1;
+                    end += 1;
+                }
+                if (dollarNum === 0) {
+                    for (iter = begin; iter < end; iter += 1) {
+                        if (text[iter] === '\\' || text[iter] === '_') {
+                            targets.push(iter);
+                        }
+                    }
+                }
+                begin = -1;
+            }
+        } else {
+            end += 1;
+        }
+    }
+    if (targets.length === 0) {
+        return text;
+    }
+    begin = 0;
+    for (iter = 0; iter < text.length; iter += 1) {
+        if (begin < targets.length && targets[begin] === iter) {
+            result += '\\';
+            begin += 1;
+        }
+        result += text[iter];
+    }
+    return result;
 }
 
 if (typeof require === 'function') {
