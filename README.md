@@ -2,14 +2,13 @@ LaTeX GitHub Markdown
 =====================
 
 [![travis-ci](https://travis-ci.org/CyberZHG/LaTeXGitHubMarkdown.svg)](https://travis-ci.org/CyberZHG/LaTeXGitHubMarkdown)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/price/bembdpjahbkabjdpdgdmalckbbcglhjb.svg?maxAge=2592000)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bembdpjahbkabjdpdgdmalckbbcglhjb.svg?maxAge=2592000)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/d/bembdpjahbkabjdpdgdmalckbbcglhjb.svg?maxAge=2592000)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
-[![Gratipay User](https://img.shields.io/gratipay/user/CyberZHG.svg?maxAge=2592000)](https://gratipay.com/~CyberZHG/)
 
 ### Installation
 
 [![Chrome Web Store](https://developer.chrome.com/webstore/images/ChromeWebStore_Badge_v2_340x96.png)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
-[![Firefox Add-ons](https://www.mozilla.org/media/img/styleguide/identity/firefox/usage-standard.dd994d6216e9.png)](https://addons.mozilla.org/en-US/firefox/addon/latex-github-markdown/)
 
 ### Introduction
 
@@ -39,12 +38,6 @@ You can see the `LaTeX` buttons in the following elements:
 
 ![Wiki](https://cloud.githubusercontent.com/assets/853842/17482586/169a7494-5db5-11e6-9454-54abffba0a6f.png)
 
-### Help us improve
-
-Due to the conflict of escape characters (`\`), some escape characters will be missing in LaTeX formulas.
-We will try to recover the characters in some common situations.
-However, if you find your formulas are not rendered correctly, please tell us with [issues](https://github.com/CyberZHG/LaTeXGitHubMarkdown/issues).
-
 ### About private repos
 
 We use local storage to store the rendered contents for private repositories, the results could only be viewed in your own browser. And the contents will be deleted immediately.
@@ -53,5 +46,3 @@ We use local storage to store the rendered contents for private repositories, th
 
 * The formulas are rendered with [MathJax](https://www.mathjax.org/).
 * Due to content security policy, we cannot render the formulas in the same page.
-* Some countries may have trouble loading MathJax because of their network conditions.
-But since you are using GitHub, we assume that you know how to handle this.
