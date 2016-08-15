@@ -38,12 +38,6 @@ You can see the `LaTeX` buttons in the following elements:
 
 ![Wiki](https://cloud.githubusercontent.com/assets/853842/17482586/169a7494-5db5-11e6-9454-54abffba0a6f.png)
 
-### Help us improve
-
-Due to the conflict of escape characters (`\`), some escape characters will be missing in LaTeX formulas.
-We will try to recover the characters in some common situations.
-However, if you find your formulas are not rendered correctly, please tell us with [issues](https://github.com/CyberZHG/LaTeXGitHubMarkdown/issues).
-
 ### About private repos
 
 We use local storage to store the rendered contents for private repositories, the results could only be viewed in your own browser. And the contents will be deleted immediately.
