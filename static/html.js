@@ -7,6 +7,13 @@ $(document).ready(function () {
             '<p>For security issues, the contents will be deleted immediately after first browsing.</p>' +
             '<p>Refresh the page will cause the contents inaccessiable.</p>';
 
+    function simpleEscape(html) {
+        html = html.replace(/\\left\s*\{/gi, '\\left \\{');
+        html = html.replace(/\\right\s*\}/gi, '\\right \\}');
+        html = html.replace('\\<br>', '\\\\<br>');
+        return html;
+    }
+
     /**
      * Read html from local storage.
      */
@@ -17,6 +24,7 @@ $(document).ready(function () {
         if (html === null) {
             html = DELETED_MESSAGE;
         }
+        html = simpleEscape(html);
         window.addRenderedToDom(html);
     }
 
