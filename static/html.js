@@ -10,7 +10,7 @@ $(document).ready(function () {
     function simpleEscape(html) {
         html = html.replace(/\\left\s*\{/gi, '\\left \\{');
         html = html.replace(/\\right\s*\}/gi, '\\right \\}');
-        html = html.replace(/\\\s*<br>/, '\\\\<br>');
+        html = html.replace(/\\\s*<br>/gi, '\\\\<br>');
         return html;
     }
 
