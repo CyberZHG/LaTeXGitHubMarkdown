@@ -16,7 +16,12 @@ A chrome extension that adds `LaTeX` buttons to Markdown elements on GitHub.
 The LaTeX formulas begin and end with `$` or `$$` are all rendered as inline style.
 Following is an example:
 
-$$\nabla \times \mathbf{B} = \displaystyle \mu_0\mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}} {\partial t}$$
+$$\left \{ \begin{array}{rll}
+\nabla \cdot \mathbf{E} &=& \displaystyle \frac {\rho} {\varepsilon_0} \\
+\nabla \cdot \mathbf{B} &=& 0 \\
+\nabla \times \mathbf{E} &=& \displaystyle - \frac{\partial \mathbf{B}} {\partial t} \\
+\nabla \times \mathbf{B} &=& \displaystyle \mu_0\mathbf{J} + \mu_0 \varepsilon_0 \frac{\partial \mathbf{E}} {\partial t}  \\
+\end{array} \right .$$
 
 If you successfully installed this extension, you can see a `LaTeX` button in the right-top corner of this Markdown document.
 
