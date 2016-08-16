@@ -1,4 +1,4 @@
-/*jslint browser: true, for: true*/
+/*jslint browser: true*/
 /*global $, window, console, require, exports, marked*/
 
 if (typeof require === 'function') {
