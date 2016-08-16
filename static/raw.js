@@ -1,4 +1,4 @@
-/*jslint browser: true*/
+/*jslint browser: true, for: true*/
 /*global $, window, console, require, exports, marked*/
 
 if (typeof require === 'function') {
@@ -18,7 +18,8 @@ function escape(text) {
         iter = -1,
         dollarNum = 0,
         targets = [],
-        result = '';
+        result = '',
+        specialChars = ['\\', '_', '~', '*'];
     while (end < text.length) {
         if (escaped) {
             escaped = false;
@@ -43,7 +44,7 @@ function escape(text) {
                 }
                 if (dollarNum === 0) {
                     for (iter = begin; iter < end; iter += 1) {
-                        if (text[iter] === '\\' || text[iter] === '_') {
+                        if (specialChars.indexOf(text[iter]) >= 0) {
                             targets.push(iter);
                         }
                     }
