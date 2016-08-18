@@ -50,4 +50,3 @@ We use local storage to store the rendered contents for private repositories, th
 ### More details
 
 * The formulas are rendered with [MathJax](https://www.mathjax.org/).
-* Due to content security policy, we cannot render the formulas in the same page.
