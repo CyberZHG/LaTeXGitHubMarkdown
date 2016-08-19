@@ -3,7 +3,7 @@
 
   "name": "LaTeX GitHub Markdown",
   "description": "Show LaTeX formulas for GitHub Markdown files.",
-  "version": "0.0.14",
+  "version": "0.0.15",
 
   "browser_action": {
     "default_icon": "icon128.png",
@@ -19,7 +19,8 @@
     "activeTab",
     "webNavigation",
     "https://github.com/",
-    "https://gist.github.com/"
+    "https://gist.github.com/",
+    "https://cyberzhg.github.io/"
   ],
   "background": {
     "scripts": ["inject.js"]
