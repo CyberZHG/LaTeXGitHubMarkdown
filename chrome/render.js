@@ -43,9 +43,6 @@ function initLaTeX() {
     /**
      * Open the page with MathJax inserted.
      *
-     * Due to GitHub's strict content security policy, MathJax could not be inserted in the same page.
-     * The new page uses the local file system, the function will not work if file system is disabled.
-     *
      * @param {Element} element The element that triggered the convertion.
      *
      * @return {void}
@@ -65,6 +62,7 @@ function initLaTeX() {
             url += 'key=' + key;
             url += '&origin=' + encodeURIComponent(getUrlWithoutQuery());
             url += '&escape=1';
+            frame.remove();
             window.open(url);
         };
         frame.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/local';
