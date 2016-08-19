@@ -72,5 +72,6 @@ $(document).ready(function () {
         var script = document.createElement('script');
         script.src = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
         $('.container').append(script);
+        $('.markdown-body').attr('finished', true);
     };
 });
