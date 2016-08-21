@@ -13,8 +13,8 @@ function toAbsoluteUrlSub(domain, path, url) {
     if (!url || url.indexOf('://') >= 0) {
         if (url.indexOf('https://cyberzhg.github.io/') >= 0 || url.indexOf('http://127.0.0.1/') >= 0) {
             url = url.split('/').slice(3).join('/');
-            if (url.substring(0, 6) === 'static') {
-                url = url.substring(url.indexOf('/') + 1);
+            if (url.substring(0, 26) === 'LaTeXGitHubMarkdown/static') {
+                url = url.split('/').slice(2).join('/');
             } else {
                 url = '/' + url;
             }
@@ -60,8 +60,8 @@ if (typeof require !== 'function') {
                 return;
             }
             a.href = origin;
-            domain = a.origin; // https://github.com
-            path = a.pathname.substring(0, a.pathname.lastIndexOf('/') + 1); // /CyberZHG[/]
+            domain = a.origin;
+            path = a.pathname.substring(0, a.pathname.lastIndexOf('/') + 1);
             $('.markdown-body').find('a').each(function (index, a) {
                 index = index + 1; // To pass jslint.
                 a.href = toAbsoluteUrlSub(domain, path, a.href);

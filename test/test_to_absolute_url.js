@@ -25,8 +25,8 @@ describe('To Absolute Url', function () {
     it('cyberzhg.github.io', function (done) {
         assert.equal(render.toAbsoluteUrlSub('https://github.com', '/CyberZHG', 'https://cyberzhg.github.io/absolute/path'), 'https://github.com/absolute/path');
         assert.equal(render.toAbsoluteUrlSub('https://github.com', '/CyberZHG/', 'https://cyberzhg.github.io/absolute/path'), 'https://github.com/absolute/path');
-        assert.equal(render.toAbsoluteUrlSub('https://github.com', '/CyberZHG', 'https://cyberzhg.github.io/static/relative/path'), 'https://github.com/CyberZHG/relative/path');
-        assert.equal(render.toAbsoluteUrlSub('https://github.com', '/CyberZHG/', 'https://cyberzhg.github.io/static/relative/path'), 'https://github.com/CyberZHG/relative/path');
+        assert.equal(render.toAbsoluteUrlSub('https://github.com', '/CyberZHG', 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/relative/path'), 'https://github.com/CyberZHG/relative/path');
+        assert.equal(render.toAbsoluteUrlSub('https://github.com', '/CyberZHG/', 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/relative/path'), 'https://github.com/CyberZHG/relative/path');
         done();
     });
 });
