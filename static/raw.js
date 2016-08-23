@@ -89,11 +89,13 @@ if (typeof require !== 'function') {
             $.ajax({
                 url: url,
                 success: function (data) {
-                    console.log('Get Raw: Success');
+                    window.addRawToDom(data);
                     callback(true, data);
                 },
                 error: function () {
-                    console.log('Get Raw: Error');
+                    window.addRenderedToDom('<h2>Failed to fetch raw content</h2>' +
+                            '<p>For unauthenticated requests, the rate limit allows you to make up to 60 requests per hour. </p>' +
+                            '<p>Please <a target="_blank" href="https://github.com/login/oauth/authorize?client_id=17b967fc39122956bcc2">sign in</a> to continue.</p>');
                     callback(false);
                 }
             });
@@ -118,11 +120,10 @@ if (typeof require !== 'function') {
                     dataType: 'text',
                     data: JSON.stringify(data),
                     success: function (text) {
-                        console.log('Render: Success');
                         window.addRenderedToDom(text);
                     },
                     error: function () {
-                        console.log('Render: Error');
+                        window.addRenderedToDom('<h2>Failed to render content</h2><p>Please disable adblock in this site</p>');
                     }
                 });
             }

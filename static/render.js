@@ -14,6 +14,9 @@ function toAbsoluteUrlSub(domain, path, url) {
         if (url.indexOf('https://cyberzhg.github.io/') >= 0 || url.indexOf('http://127.0.0.1/') >= 0) {
             url = url.split('/').slice(3).join('/');
             if (url.substring(0, 26) === 'LaTeXGitHubMarkdown/static') {
+                if (url.substring(26, 31) === '/raw?') {
+                    return 'https://cyberzhg.github.io/' + url;
+                }
                 url = url.split('/').slice(2).join('/');
             } else {
                 url = '/' + url;
@@ -72,6 +75,14 @@ if (typeof require !== 'function') {
                 img.src = img.src.replace('/blob/', '/raw/');
             });
         }
+
+        /**
+         * Add raw to DOM.
+         * @param {string} html
+         */
+        window.addRawToDom = function (raw) {
+            $('.markdown-body').html('<h2>Rendering...</h2><pre>' + raw + '</pre>');
+        };
 
         /**
          * Add html to DOM.
