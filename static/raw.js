@@ -94,8 +94,7 @@ if (typeof require !== 'function') {
                 },
                 error: function () {
                     window.addRenderedToDom('<h2>Failed to fetch raw content</h2>' +
-                            '<p>For unauthenticated requests, the rate limit allows you to make up to 60 requests per hour. </p>' +
-                            '<p>Please <a target="_blank" href="https://github.com/login/oauth/authorize?client_id=17b967fc39122956bcc2">sign in</a> to continue.</p>');
+                            '<p>Please check your network status.</p>');
                     callback(false);
                 }
             });
@@ -110,6 +109,7 @@ if (typeof require !== 'function') {
                         'mode': 'markdown'
                     };
                 if (token) {
+                    $('#login').hide();
                     url += '?access_token=' + token;
                     data.access_token = token;
                 }
@@ -123,7 +123,10 @@ if (typeof require !== 'function') {
                         window.addRenderedToDom(text);
                     },
                     error: function () {
-                        window.addRenderedToDom('<h2>Failed to render content</h2><p>Please disable adblock in this site</p>');
+                        window.addRenderedToDom('<h2>Failed to render content</h2>' +
+                                '<p>Please disable adblock in this site</p>' +
+                                '<p>For unauthenticated requests, the rate limit allows you to make up to 60 requests per hour. </p>' +
+                                '<p>Please <a target="_blank" href="https://github.com/login/oauth/authorize?client_id=17b967fc39122956bcc2">sign in</a> to continue.</p>');
                     }
                 });
             }
