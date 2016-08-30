@@ -3,7 +3,7 @@ LaTeX GitHub Markdown
 
 [![travis-ci](https://travis-ci.org/CyberZHG/LaTeXGitHubMarkdown.svg)](https://travis-ci.org/CyberZHG/LaTeXGitHubMarkdown)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/price/bembdpjahbkabjdpdgdmalckbbcglhjb.svg)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
-[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bembdpjahbkabjdpdgdmalckbbcglhjb.svg0)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
+[![Chrome Web Store](https://img.shields.io/chrome-web-store/v/bembdpjahbkabjdpdgdmalckbbcglhjb.svg)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
 [![Chrome Web Store](https://img.shields.io/chrome-web-store/d/bembdpjahbkabjdpdgdmalckbbcglhjb.svg)](https://chrome.google.com/webstore/detail/latex-github-markdown/bembdpjahbkabjdpdgdmalckbbcglhjb)
 
 ### Installation
