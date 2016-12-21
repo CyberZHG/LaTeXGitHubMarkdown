@@ -168,7 +168,7 @@ function initLaTeX() {
         var groups, gistElement, actions, header, url;
         /** Markdown files. */
         if (element.className.indexOf(TYPE_FILE) >= 0) {
-            groups = element.getElementsByClassName('btn-group');
+            groups = element.getElementsByClassName('BtnGroup');
             if (groups.length > 0) {
                 if (isPrivateRepo()) {
                     element = element.getElementsByClassName('markdown-body');
@@ -202,7 +202,7 @@ function initLaTeX() {
         if (element.className.indexOf(TYPE_COMMENT) >= 0) {
             groups = element.getElementsByClassName('timeline-comment-actions');
             if (groups.length > 0) {
-                element = element.getElementsByClassName('markdown-body');
+                element = element.parentNode.getElementsByClassName('markdown-body');
                 if (element.length > 0) {
                     element = element[0].innerHTML;
                     addButtonToGroup(groups[0], 'btn-link timeline-comment-action', element);
@@ -221,7 +221,7 @@ function initLaTeX() {
                     actions.className = 'file-actions';
                     element.insertBefore(actions, element.firstChild);
                     groups = document.createElement('div');
-                    groups.className = 'btn-group';
+                    groups.className = 'BtnGroup';
                     actions.appendChild(groups);
                     if (isPrivateRepo()) {
                         element = element.getElementsByClassName('markdown-body');
