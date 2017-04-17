@@ -30,13 +30,4 @@ $(document).ready(function () {
 
     renderLocalHtml();
 
-    window.onmessage = function (event) {
-        if (!isNaN(event.data)) {
-            if (parent.postMessage) {
-                var height = document.getElementById('container').offsetHeight;
-                parent.postMessage(height, '*');
-            }
-        }
-    };
-
 });
