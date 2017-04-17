@@ -92,7 +92,7 @@ if (typeof require !== 'function') {
             $('.markdown-body').html(html);
             toAbsoluteUrl();
             var script = document.createElement('script');
-            script.src = "https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+            script.src = "https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.0/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
             $('.container').append(script);
             $('.markdown-body').attr('finished', true);
         };
