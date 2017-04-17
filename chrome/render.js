@@ -62,7 +62,6 @@ function initLaTeX() {
             url += 'key=' + key;
             url += '&origin=' + encodeURIComponent(getUrlWithoutQuery());
             url += '&escape=1';
-            frame.remove();
             window.open(url);
         };
         frame.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/local';
