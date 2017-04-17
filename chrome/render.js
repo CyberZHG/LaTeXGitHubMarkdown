@@ -58,7 +58,7 @@ function initLaTeX() {
             rendered.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/html?key=' + key;
         };
         window.onmessage = function (event) {
-            rendered.style.height = (parseInt(event.data) + 20) + 'px';
+            rendered.style.height = (parseInt(event.data, 10) + 20) + 'px';
         };
         frame.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/local';
     }
