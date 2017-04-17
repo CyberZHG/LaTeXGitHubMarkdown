@@ -33,14 +33,6 @@ function initLaTeX() {
     addToElements(document.getElementsByClassName(TYPE_WIKI));
 
     /**
-     * Get the current url without query string.
-     * @return {string}
-     */
-    function getUrlWithoutQuery() {
-        return [location.protocol, '//', location.host, location.pathname].join('');
-    }
-
-    /**
      * Open the page with MathJax inserted.
      *
      * @param {Element} element The element that triggered the convertion.
