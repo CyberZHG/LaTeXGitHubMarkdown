@@ -33,36 +33,32 @@ function initLaTeX() {
     addToElements(document.getElementsByClassName(TYPE_WIKI));
 
     /**
-     * Get the current url without query string.
-     * @return {string}
-     */
-    function getUrlWithoutQuery() {
-        return [location.protocol, '//', location.host, location.pathname].join('');
-    }
-
-    /**
      * Open the page with MathJax inserted.
      *
      * @param {Element} element The element that triggered the convertion.
      *
      * @return {void}
      */
-    function openWithLocal(html) {
-        var frame = document.createElement('iframe');
+    function openWithLocal(element, html) {
+        var key = 'html_' + Math.floor(Math.random() * 65535).toString(16),
+            frame = document.createElement('iframe'),
+            rendered = document.createElement('iframe');
+        element.innerHTML = '';
+        rendered.setAttribute('frameBorder', '0');
+        rendered.setAttribute('style', 'width: 100%;');
+        element.appendChild(rendered);
         frame.setAttribute('hidden', true);
         document.body.appendChild(frame);
         frame.onload = function () {
-            var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/html?',
-                key = 'html_' + Math.floor(Math.random() * 65535).toString(16),
-                data = {
+            var data = {
                     key: key,
                     html: html
                 };
             frame.contentWindow.postMessage(JSON.stringify(data), '*');
-            url += 'key=' + key;
-            url += '&origin=' + encodeURIComponent(getUrlWithoutQuery());
-            url += '&escape=1';
-            window.open(url);
+            rendered.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/html?key=' + key;
+        };
+        window.onmessage = function (event) {
+            rendered.style.height = (parseInt(event.data) + 20) + 'px';
         };
         frame.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/local';
     }
@@ -75,11 +71,12 @@ function initLaTeX() {
      *
      * @param {Element} group The action group.
      * @param {string} className The class names of the button.
+     * @param {Element} element The HTML element that contains the Markdown.
      * @param {string} html The rendered Markdown.
      *
      * @return {void}
      */
-    function addButtonToGroup(group, className, html) {
+    function addButtonToGroup(group, className, element, html) {
         var lock = group.getElementsByClassName('btn-latex'),
             button = document.createElement('button');
         if (lock.length > 0) {
@@ -87,7 +84,7 @@ function initLaTeX() {
         }
         button.className = className + ' btn-latex';
         button.onclick = function () {
-            openWithLocal(html);
+            openWithLocal(element, html);
         };
         button.innerHTML = 'LaTeX';
         group.appendChild(button);
@@ -108,8 +105,8 @@ function initLaTeX() {
             if (groups.length > 0) {
                 element = element.getElementsByClassName('markdown-body');
                 if (element.length > 0) {
-                    element = element[0].innerHTML;
-                    addButtonToGroup(groups[0], 'btn btn-sm', element);
+                    element = element[0];
+                    addButtonToGroup(groups[0], 'btn btn-sm', element, element.innerHTML);
                 }
                 return;
             }
@@ -122,8 +119,8 @@ function initLaTeX() {
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
                         element = element.getElementsByClassName('markdown-body');
                         if (element.length > 0) {
-                            element = element[0].innerHTML;
-                            addButtonToGroup(groups[0], 'btn btn-sm', element);
+                            element = element[0];
+                            addButtonToGroup(groups[0], 'btn btn-sm', element, element.innerHTML);
                         }
                         return;
                     }
@@ -136,8 +133,8 @@ function initLaTeX() {
             if (groups.length > 0) {
                 element = element.parentNode.getElementsByClassName('markdown-body');
                 if (element.length > 0) {
-                    element = element[0].innerHTML;
-                    addButtonToGroup(groups[0], 'btn-link timeline-comment-action', element);
+                    element = element[0];
+                    addButtonToGroup(groups[0], 'btn-link timeline-comment-action', element, element.innerHTML);
                 }
                 return;
             }
@@ -157,8 +154,8 @@ function initLaTeX() {
                     actions.appendChild(groups);
                     element = element.getElementsByClassName('markdown-body');
                     if (element.length > 0) {
-                        element = element[0].innerHTML;
-                        addButtonToGroup(groups, 'btn btn-sm', element);
+                        element = element[0];
+                        addButtonToGroup(groups, 'btn btn-sm', element, element.innerHTML);
                     }
                     return;
                 }
@@ -173,8 +170,8 @@ function initLaTeX() {
                 element.insertBefore(actions, element.firstChild);
                 element = element.getElementsByClassName('markdown-body');
                 if (element.length > 0) {
-                    element = element[0].innerHTML;
-                    addButtonToGroup(actions, 'btn btn-sm', element);
+                    element = element[0];
+                    addButtonToGroup(actions, 'btn btn-sm', element, element.innerHTML);
                 }
                 return;
             }
