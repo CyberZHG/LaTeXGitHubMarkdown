@@ -101,7 +101,7 @@ function initLaTeX() {
      * @return {void}
      */
     function addOpenInNewTabButton(element) {
-        var groups, gistElement, actions, header, url;
+        var groups, gistElement, actions, header;
         /** Markdown files. */
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('BtnGroup');
