@@ -33,6 +33,13 @@
             displayMath: []
           }
         });
+        MathJax.Hub.Queue(
+          function () {
+            if (parent.postMessage) {
+              parent.postMessage(document.body.offsetHeight, '*');
+            }
+          }
+        );
       </script>
     </div>
 
