@@ -76,11 +76,10 @@ function initLaTeX() {
      * @param {Element} group The action group.
      * @param {string} className The class names of the button.
      * @param {string} html The rendered Markdown.
-     * @param {string} rawUrl
      *
      * @return {void}
      */
-    function addButtonToGroup(group, className, html, rawUrl) {
+    function addButtonToGroup(group, className, html) {
         var lock = group.getElementsByClassName('btn-latex'),
             button = document.createElement('button');
         if (lock.length > 0) {
@@ -88,72 +87,10 @@ function initLaTeX() {
         }
         button.className = className + ' btn-latex';
         button.onclick = function () {
-            if (rawUrl === undefined) {
-                openWithLocal(html);
-            } else {
-                var url = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/raw?';
-                url += 'url=' + encodeURIComponent(rawUrl);
-                url += '&origin=' + encodeURIComponent(getUrlWithoutQuery());
-                url += '&escape=1';
-                window.open(url);
-            }
+            openWithLocal(html);
         };
         button.innerHTML = 'LaTeX';
         group.appendChild(button);
-    }
-
-    /**
-     * Check if the current repository is private.
-     * @return {boolean}
-     */
-    function isPrivateRepo() {
-        return document.getElementsByClassName('label-private').length > 0;
-    }
-
-    /**
-     * Generate raw.githubusercontent.com url for raw file.
-     * @param {string} rawUrl
-     * @return {string}
-     */
-    function constructRawGitHubUserContentUrl(rawUrl) {
-        var parts = rawUrl.split('/');
-        rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
-        return 'https://raw.githubusercontent.com' + rawUrl;
-    }
-
-    /**
-     * Generate gist.githubusercontent.com url for raw file.
-     * @param {string} rawUrl
-     * @return {string}
-     */
-    function constructGistGitHubUserContentUrl(rawUrl) {
-        return 'https://gist.githubusercontent.com' + rawUrl;
-    }
-
-    /**
-     * Generate raw.githubusercontent.com url for wiki file.
-     * @param {string} rawUrl
-     * @return {string}
-     */
-    function constructWikiGitHubUserContentUrl(rawUrl) {
-        var parts = rawUrl.split('/');
-        rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
-        return 'https://raw.githubusercontent.com/wiki' + rawUrl + '.md';
-    }
-
-    /**
-     * Generate raw.githubusercontent.com url for README.md file.
-     * @param {string} rawUrl
-     * @return {string}
-     */
-    function constructReadMeGitHubUserContentUrl(rawUrl) {
-        var parts = rawUrl.split('/');
-        if (parts.length === 3) {
-            rawUrl = parts.slice(0, 3).concat(parts.slice(4)).concat('master').join('/');
-        } else {
-            rawUrl = parts.slice(0, 3).concat(parts.slice(4)).join('/');
-        }
-        return 'https://raw.githubusercontent.com' + rawUrl + '/README.md';
     }
 
     /**
@@ -169,16 +106,10 @@ function initLaTeX() {
         if (element.className.indexOf(TYPE_FILE) >= 0) {
             groups = element.getElementsByClassName('BtnGroup');
             if (groups.length > 0) {
-                if (isPrivateRepo()) {
-                    element = element.getElementsByClassName('markdown-body');
-                    if (element.length > 0) {
-                        element = element[0].innerHTML;
-                        addButtonToGroup(groups[0], 'btn btn-sm', element);
-                    }
-                } else {
-                    url = document.getElementById('raw-url').getAttribute('href');
-                    url = constructRawGitHubUserContentUrl(url);
-                    addButtonToGroup(groups[0], 'btn btn-sm', '', url);
+                element = element.getElementsByClassName('markdown-body');
+                if (element.length > 0) {
+                    element = element[0].innerHTML;
+                    addButtonToGroup(groups[0], 'btn btn-sm', element);
                 }
                 return;
             }
@@ -189,9 +120,11 @@ function initLaTeX() {
                 if (gistElement.length > 0) {
                     gistElement = gistElement[0];
                     if (gistElement.innerHTML.trim().endsWith('.md')) {
-                        url = groups[0].getElementsByClassName('btn')[0].getAttribute('href');
-                        url = constructGistGitHubUserContentUrl(url);
-                        addButtonToGroup(groups[0], 'btn btn-sm', '', url);
+                        element = element.getElementsByClassName('markdown-body');
+                        if (element.length > 0) {
+                            element = element[0].innerHTML;
+                            addButtonToGroup(groups[0], 'btn btn-sm', element);
+                        }
                         return;
                     }
                 }
@@ -222,16 +155,10 @@ function initLaTeX() {
                     groups = document.createElement('div');
                     groups.className = 'BtnGroup';
                     actions.appendChild(groups);
-                    if (isPrivateRepo()) {
-                        element = element.getElementsByClassName('markdown-body');
-                        if (element.length > 0) {
-                            element = element[0].innerHTML;
-                            addButtonToGroup(groups, 'btn btn-sm', element);
-                        }
-                    } else {
-                        url = window.location.pathname;
-                        url = constructReadMeGitHubUserContentUrl(url);
-                        addButtonToGroup(groups, 'btn btn-sm', '', url);
+                    element = element.getElementsByClassName('markdown-body');
+                    if (element.length > 0) {
+                        element = element[0].innerHTML;
+                        addButtonToGroup(groups, 'btn btn-sm', element);
                     }
                     return;
                 }
@@ -244,16 +171,10 @@ function initLaTeX() {
                 actions = document.createElement('div');
                 actions.className = 'gh-header-actions';
                 element.insertBefore(actions, element.firstChild);
-                if (isPrivateRepo()) {
-                    element = element.getElementsByClassName('markdown-body');
-                    if (element.length > 0) {
-                        element = element[0].innerHTML;
-                        addButtonToGroup(actions, 'btn btn-sm', element);
-                    }
-                } else {
-                    url = window.location.pathname;
-                    url = constructWikiGitHubUserContentUrl(url);
-                    addButtonToGroup(actions, 'btn btn-sm', '', url);
+                element = element.getElementsByClassName('markdown-body');
+                if (element.length > 0) {
+                    element = element[0].innerHTML;
+                    addButtonToGroup(actions, 'btn btn-sm', element);
                 }
                 return;
             }
