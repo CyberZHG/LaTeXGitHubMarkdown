@@ -65,8 +65,8 @@ function initLaTeX() {
             frame.contentWindow.postMessage(JSON.stringify(data), '*');
             rendered.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/html?key=' + key;
         };
-        rendered.onload = function () {
-            rendered.style.height = rendered.contentWindow.document.body.scrollHeight + 'px';
+        window.onmessage = function (event) {
+            rendered.style.height = event.data + 'px';
         };
         frame.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/local';
     }
