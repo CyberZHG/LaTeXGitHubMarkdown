@@ -52,7 +52,8 @@ function initLaTeX() {
         frame.onload = function () {
             var data = {
                     key: key,
-                    html: html
+                    html: html,
+                    href: window.location.href
                 };
             frame.contentWindow.postMessage(JSON.stringify(data), '*');
             rendered.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/html?key=' + key;
