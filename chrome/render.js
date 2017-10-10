@@ -12,7 +12,7 @@ function initLaTeX() {
         TYPE_WIKI = 'wiki-body',
 
     /** Whether in debug mode. */
-        DEBUG = true,
+        DEBUG = false,
 
     /** The prefix of pages. */
         STATIC_PATH = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/',
@@ -21,7 +21,7 @@ function initLaTeX() {
         elements = [];
 
     if (DEBUG) {
-        STATIC_PATH = 'http://127.0.0.1:8000/'
+        STATIC_PATH = 'http://127.0.0.1:8000/';
     }
 
     /**

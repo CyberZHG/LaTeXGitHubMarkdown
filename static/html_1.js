@@ -8,11 +8,9 @@ $(document).ready(function () {
             '<p>Refresh the page will cause the contents inaccessiable.</p>';
 
     function simpleEscape(html) {
-        console.log(html);
         html = html.replace(/\\left\s*\{/gi, '\\left \\{');
         html = html.replace(/\\right\s*\}/gi, '\\right \\}');
         html = html.replace(/\\\s*<br>/gi, '\\\\<br>');
-        console.log(html);
         return html;
     }
 
