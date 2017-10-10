@@ -11,8 +11,18 @@ function initLaTeX() {
         TYPE_COMMENT = 'timeline-comment',
         TYPE_WIKI = 'wiki-body',
 
+    /** Whether in debug mode. */
+        DEBUG = false,
+
+    /** The prefix of pages. */
+        STATIC_PATH = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/',
+
     /** The global Markdown elements. */
         elements = [];
+
+    if (DEBUG) {
+        STATIC_PATH = 'http://127.0.0.1:8000/';
+    }
 
     /**
      * Add new elements to the the global elements variable.
@@ -56,12 +66,12 @@ function initLaTeX() {
                     href: window.location.href
                 };
             frame.contentWindow.postMessage(JSON.stringify(data), '*');
-            rendered.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/html?key=' + key;
+            rendered.src = STATIC_PATH + 'html_1.html?key=' + key;
         };
         window.onmessage = function (event) {
             rendered.style.height = (parseInt(event.data, 10) + 20) + 'px';
         };
-        frame.src = 'https://cyberzhg.github.io/LaTeXGitHubMarkdown/static/local';
+        frame.src = STATIC_PATH + 'local_1.html';
     }
 
     /**
