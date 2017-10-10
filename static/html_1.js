@@ -11,6 +11,7 @@ $(document).ready(function () {
         html = html.replace(/\\left\s*\{/gi, '\\left \\{');
         html = html.replace(/\\right\s*\}/gi, '\\right \\}');
         html = html.replace(/\\\s*<br>/gi, '\\\\<br>');
+        html = html.replace(/\\\s+/gi, '\\\\<br>');
         return html;
     }
 
