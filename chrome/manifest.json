@@ -3,7 +3,7 @@
 
   "name": "LaTeX GitHub Markdown",
   "description": "Show LaTeX formulas for GitHub Markdown files.",
-  "version": "0.1.0",
+  "version": "0.1.1",
 
   "browser_action": {
     "default_icon": "icon128.png",
