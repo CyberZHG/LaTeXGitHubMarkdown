@@ -1,6 +1,6 @@
 {
   "name": "latex-github-markdown-static",
-  "version": "0.0.14",
+  "version": "0.2.0",
   "dependencies": {
     "marked": "0.3.6"
   },
